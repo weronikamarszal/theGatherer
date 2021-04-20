@@ -20,6 +20,9 @@ class CreateObjectsTable extends Migration
             $table->string('name');
             $table->timestamps();
         });
+//        Schema::table('objects', function (Blueprint $table) {
+//            $table->string('photo_path');
+//        });
     }
 
     /**

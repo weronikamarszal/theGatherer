@@ -2,8 +2,9 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Models\User;
 use App\Models\Collection;
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\ObjectController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -19,6 +20,11 @@ Route::get('/get-collections', function(){
 });
 Route::get('/get-collections/{collection}', function(Collection $collection){
     return $collection;
+});
+Route::get('/get-collection-objects/{id}', function($id){
+    $obj=new ObjectController();
+    $objects=$obj->getObjects($id);
+    return $objects;
 });
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
