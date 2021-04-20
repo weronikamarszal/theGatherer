@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Models\User;
+use App\Models\Collection;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -13,8 +14,11 @@ use App\Models\User;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-Route::get('/ad', function(){
-    return User::all();
+Route::get('/get-collections', function(){
+    return Collection::all();
+});
+Route::get('/get-collections/{collection}', function(Collection $collection){
+    return $collection;
 });
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
