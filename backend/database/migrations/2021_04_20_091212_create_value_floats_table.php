@@ -15,8 +15,8 @@ class CreateValueFloatsTable extends Migration
     {
         Schema::create('value_floats', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('collection_id')->unsigned();
-            $table->foreign('collection_id')->references('id')->on('collections');
+            $table->integer('object_id')->unsigned();
+            $table->foreign('object_id')->references('id')->on('objects');
             $table->integer('attribute_id')->unsigned();
             $table->foreign('attribute_id')->references('id')->on('object_attributes');
             $table->float('value');
