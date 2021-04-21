@@ -6,6 +6,6 @@ export const MyCollections: FunctionComponent = () => {
   return <div>
     <h1>THE GATHERER</h1>
     <h3>Your collections:</h3>
-    <CollectionsList onDelete={() => 0}/>
+    <CollectionsList onDelete={() => 0} collectionsList={[]}/>
   </div>;
 };
