@@ -5,7 +5,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
-class DatabaseSeeder extends Seeder
+class IntSeeder extends Seeder
 
 {
     /**
@@ -15,14 +15,11 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        $seeders = [
-            new CollectionsSeeder(),
-            new ObjectAttributesSeeder(),
-            new ObjectsSeeder(),
+        $values=[
+            ['object_id'=>1,'attribute_id'=>1,'value'=>16],
+            ['object_id'=>2,'attribute_id'=>1,'value'=>17],
         ];
+        DB::table('value_ints')->insert($values);
 
-        foreach ($seeders as $i) {
-            $i->run();
-        }
     }
 }
