@@ -5,7 +5,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
-class DatabaseSeeder extends Seeder
+class DateSeeder extends Seeder
 
 {
     /**
@@ -15,14 +15,11 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        $seeders = [
-            new CollectionsSeeder(),
-            new ObjectAttributesSeeder(),
-            new ObjectsSeeder(),
+        $values=[
+            ['object_id'=>3,'attribute_id'=>6,'value'=>'1954-03-12'],
+            ['object_id'=>4,'attribute_id'=>6,'value'=>'1968-07-14'],
         ];
+        DB::table('value_dates')->insert($values);
 
-        foreach ($seeders as $i) {
-            $i->run();
-        }
     }
 }
