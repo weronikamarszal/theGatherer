@@ -72,11 +72,8 @@ class ObjectController extends BaseController
             }
         }
 
-
-        $lengthToAppend=sizeof($vals)/sizeof($objects);
-       //dump($lengthToAppend);
         $response=[];
-        $chunks=array_chunk($vals,$lengthToAppend,true);
+        $chunks=array_chunk($vals,sizeof($objects),true);
         for($i=0;$i<sizeof($objects);$i++){
             array_push($response,array_merge(get_object_vars($objects[$i]),$chunks[$i]));
         }
