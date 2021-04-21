@@ -18,11 +18,9 @@ class CreateObjectsTable extends Migration
             $table->integer('collection_id')->unsigned();
             $table->foreign('collection_id')->references('id')->on('collections');
             $table->string('name');
+            $table->string('photo_path')->default('NULL');
             $table->timestamps();
         });
-//        Schema::table('objects', function (Blueprint $table) {
-//            $table->string('photo_path');
-//        });
     }
 
     /**
