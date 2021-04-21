@@ -14,6 +14,7 @@ import {CollectionsList} from "./views/CollectionsList";
 import {AllCollections} from "./pages/AllCollections/AllCollections";
 import {MyCollections} from "./pages/MyCollections/MyCollections";
 import ThisCollection from './pages/ThisCollection/ThisCollection';
+import {CollectionObject} from "./pages/CollectionObject/CollectionObject";
 
 const {SubMenu} = Menu;
 
@@ -42,6 +43,9 @@ class Sider extends React.Component {
           <Menu.Item key="4">
             <Link to="/this-collection">This Collection</Link>
           </Menu.Item>
+          <Menu.Item key="4">
+            <Link to="/object">Object</Link>
+          </Menu.Item>
         </Menu.ItemGroup>
       </Menu>
 
@@ -69,6 +73,9 @@ export default function App() {
               </Route>
               <Route path="/this-collection">
                 <ThisCollection/>
+              </Route>
+              <Route path="/object">
+                <CollectionObject/>
               </Route>
             </Switch>
           </Col>
