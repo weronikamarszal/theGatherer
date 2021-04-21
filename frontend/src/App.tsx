@@ -18,20 +18,14 @@ import ThisCollection from './pages/ThisCollection/ThisCollection';
 const {SubMenu} = Menu;
 
 class Sider extends React.Component {
-  handleClick = (e: any) => {
-    console.log('click ', e);
-  };
 
   render() {
     return (
       <Menu
-        onClick={this.handleClick}
         style={{
           width: 256,
           height: '100vh'
         }}
-        defaultSelectedKeys={['1']}
-        defaultOpenKeys={['sub1']}
         mode="inline"
         theme="dark"
       >
@@ -60,13 +54,12 @@ class Sider extends React.Component {
 export default function App() {
   return (
     <Router>
-
       <div className="App">
         <Row>
           <Col flex="100px">
             <Sider/>
           </Col>
-          <Col flex="auto">
+          <Col flex="auto" className={'app-content'}>
             <Switch>
               <Route path="/all-collections">
                 <AllCollections/>
@@ -80,7 +73,6 @@ export default function App() {
             </Switch>
           </Col>
         </Row>
-
       </div>
     </Router>
   )
