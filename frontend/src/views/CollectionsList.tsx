@@ -1,28 +1,13 @@
-import {FunctionComponent} from "react";
-import { Table, Tag, Space } from 'antd';
+import {FunctionComponent, useEffect, useState} from "react";
+import {Table, Tag, Space} from 'antd';
 
-const data = [
-  {
-    key: '1',
-    name: 'Collection 1',
-  },
-  {
-    key: '2',
-    name: 'Collection 2',
-  },
-  {
-    key: '3',
-    name: 'Collection 3',
-  },
-];
-
-export const CollectionsList: FunctionComponent<{onDelete?: () => void}> = (props) => {
+export const CollectionsList: FunctionComponent<{ onDelete?: () => void, collectionsList: any[]}> = (props) => {
   const columns = [
     {
       title: 'Name',
       dataIndex: 'name',
       key: 'name',
-      render: (text : any) => <a>{text}</a>,
+      render: (text: any) => <a>{text}</a>,
     },
     {
       title: 'Action',
@@ -38,6 +23,6 @@ export const CollectionsList: FunctionComponent<{onDelete?: () => void}> = (prop
   ];
 
   return <div>
-    <Table columns={columns} dataSource={data} />
+    <Table columns={columns} dataSource={props.collectionsList}/>
   </div>;
 };

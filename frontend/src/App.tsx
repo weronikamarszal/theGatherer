@@ -17,14 +17,10 @@ import {MyCollections} from "./pages/MyCollections/MyCollections";
 const {SubMenu} = Menu;
 
 class Sider extends React.Component {
-  handleClick = (e: any) => {
-    console.log('click ', e);
-  };
 
   render() {
     return (
       <Menu
-        onClick={this.handleClick}
         style={{
           width: 256,
           height: '100vh'
