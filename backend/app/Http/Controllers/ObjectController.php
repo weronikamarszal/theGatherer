@@ -5,7 +5,10 @@ namespace App\Http\Controllers;
 
 
 use Illuminate\Routing\Controller as BaseController;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+
+
 
 class ObjectController extends BaseController
 {
@@ -32,36 +35,36 @@ class ObjectController extends BaseController
         }
 
         $counter=sizeof(array_count_values($types));
-        $c=array_count_values($types);
-        $c=array_keys($c);
+        $numberOfTypes=array_count_values($types);
+        $numberOfTypes=array_keys($numberOfTypes);
 
         //dump($counter);
         for ($i=0;$i<sizeof($objects);$i++) {
             $obs = get_object_vars($objects[$i]);
-            foreach ($c as $j) {
+            foreach ($numberOfTypes as $type) {
 
-                if ($j == 1) {
+                if ($type == 1) {
                     array_push($vals, DB::table('value_ints')
                         ->join('object_attributes', 'value_ints.attribute_id', '=', 'object_attributes.id')
                         ->select('object_attributes.label', 'value')
                         ->where('collection_id', $collectionID)
                         ->where('object_id', $obs['id'])
                         ->get());
-                } elseif ($j == 2) {
+                } elseif ($type == 2) {
                     array_push($vals, DB::table('value_floats')
                         ->join('object_attributes', 'value_floats.attribute_id', '=', 'object_attributes.id')
                         ->select('object_attributes.label', 'value')
                         ->where('collection_id', $collectionID)
                         ->where('object_id', $obs['id'])
                         ->get());
-                } elseif ($j  == 3) {
+                } elseif ($type  == 3) {
                     array_push($vals, DB::table('value_strings')
                         ->join('object_attributes', 'value_strings.attribute_id', '=', 'object_attributes.id')
                         ->select('object_attributes.label', 'value')
                         ->where('collection_id', $collectionID)
                         ->where('object_id', $obs['id'])
                         ->get());
-                } elseif ($j ==4){
+                } elseif ($type==4){
                     array_push($vals, DB::table('value_dates')
                         ->join('object_attributes', 'value_dates.attribute_id', '=', 'object_attributes.id')
                         ->select('object_attributes.label', 'value')
@@ -78,6 +81,22 @@ class ObjectController extends BaseController
             array_push($response,array_merge(get_object_vars($objects[$i]),$chunks[$i]));
         }
         //dump($response);
+        $response=json_encode($response);
         return $response;
     }
+    public function createObject(Request $request){
+        $test=$request->name;
+        // name, label, type
+        return response()->json([
+            "message"=>"Object created successfully"
+        ],201);
+    }
+    public function createAttributes(Request $request){
+        $test=$request->name;
+        // name, label, type
+        return response()->json([
+            "message"=>"Attributes created successfully"
+        ],201);
+    }
 }
+
