@@ -152,19 +152,6 @@ class ObjectController extends BaseController
         ],201);
 
     }
-    public function createObject(Request $request){
-        $test=$request->name;
-        // name, label, type
-        return response()->json([
-            "message"=>"Object created successfully"
-        ],201);
-    }
-    public function createAttributes(Request $request){
-        $test=$request->name;
-        // name, label, type
-        return response()->json([
-            "message"=>"Attributes created successfully"
-        ],201);
-    }
+
 }
 

@@ -40,9 +40,4 @@ Route::get('/get-object/{id}',function($id){
 
 Route::post('/add-object',[ ObjectController::class,'createObject']);
 Route::post('/create-attributes/{id}',[ ObjectController::class,'createAttributes']);
-e-attributes',[ ObjectController::class,'createAttributes']);
 
-
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
