@@ -9,6 +9,8 @@ class Collection extends Model
 {
     use HasFactory;
 
-
+    public function objects(){
+        return $this->hasMany(Objects::class);
+    }
 
 }
