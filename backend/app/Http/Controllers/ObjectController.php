@@ -119,17 +119,23 @@ class ObjectController extends BaseController
         $objs=Collection::find($collection_id)->objects;
         $objectsToSend=[];
         foreach($objs as $object){
-            array_push($objectsToSend,$this->getObject($object->id));
+            array_push($objectsToSend,$this->getObject($object->id,false));
         }
-        dump($objectsToSend);
+        return json_encode($objectsToSend);
     }
 
-    public function getObject($id){
+    public function getObject($id,bool $returnJson){
         $obj=Objects::find($id);
         $objToSend=array('id'=>$obj->id,'collection_id'=>$obj->collection_id, 'name'=>$obj->name,
             'photo_path'=>$obj->photo_path);
         //dump($objToSend);
-        return json_encode($this->getValues($obj,$objToSend));
+        if($returnJson){
+            return json_encode($this->getValues($obj,$objToSend));
+        }
+        else{
+            return $this->getValues($obj,$objToSend);
+        }
+
     }
 
     public function createObject(Request $request){

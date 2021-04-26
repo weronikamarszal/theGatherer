@@ -34,7 +34,7 @@ Route::get('/get-collection-objects/{id}', function($id){
 });
 Route::get('/get-object/{id}',function($id){
     $obj=new ObjectController();
-    return $obj->getObject($id);
+    return $obj->getObject($id,true);
 });
 
 Route::post('/add-object',[ ObjectController::class,'createObject']);
