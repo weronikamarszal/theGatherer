@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\DB;
 use App\Models\Objects;
 
 
+
+
 class ObjectController extends BaseController
 {
     public function getValues($obj,$objToSend){
@@ -21,6 +23,7 @@ class ObjectController extends BaseController
                 $objToSend[$key]=$value->value;
             }
         }
+
         if($obj->valueInts){
             foreach($obj->valueInts as $value){
                 $key=strval($value->attributeName->label);
@@ -144,6 +147,21 @@ class ObjectController extends BaseController
         $attr=new ObjectAttributes;
         $attr->collection_id=$id;
         $attr->label=$request->label;
+        return response()->json([
+            "message"=>"Attributes created successfully"
+        ],201);
+
+    }
+    public function createObject(Request $request){
+        $test=$request->name;
+        // name, label, type
+        return response()->json([
+            "message"=>"Object created successfully"
+        ],201);
+    }
+    public function createAttributes(Request $request){
+        $test=$request->name;
+        // name, label, type
         return response()->json([
             "message"=>"Attributes created successfully"
         ],201);
