@@ -16,8 +16,8 @@ class CollectionsSeeder extends Seeder
     public function run()
     {
         $values=[
-            ['id'=>1,'description'=>'Kolekcja mieczy polskich','name'=>'Miecze polskie'],
-            ['id'=>2,'description'=>'Kolekcja znaczkow niemieckich','name'=>'Znaczki niemieckie'],
+            ['id'=>1,'description'=>'Kolekcja mieczy polskich','name'=>'Miecze polskie','isPrivate'=>0],
+            ['id'=>2,'description'=>'Kolekcja znaczkow niemieckich','name'=>'Znaczki niemieckie','isPrivate'=>0],
         ];
         DB::table('collections')->insert($values);
 
