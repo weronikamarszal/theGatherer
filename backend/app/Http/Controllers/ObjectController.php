@@ -140,23 +140,42 @@ class ObjectController extends BaseController
         }
 
     }
-
+    // KODY TABELI:
+    // 1- value_ints
+    // 2- value_floats
+    // 3- value_strings
+    // 4- value_dates
     public function createObject(Request $request){
-        $test=$request->name;
-        // name, label, type
+        $deserialized=json_encode($request);
+        // name, label, type,photo_path
+        $object=new Objects;
+        $object->collection_id=$request->collection_id;
+        $object->name=$request->name;
+        $object->photo_path=$request->photo_path;
+        $result1=$object->save;
+
         return response()->json([
             "message"=>"Object created successfully"
         ],201);
     }
+
     public function createAttributes(Request $request, $id){
         //collection_id,label, type
         $attr=new ObjectAttributes;
         $attr->collection_id=$id;
         $attr->label=$request->label;
-        return response()->json([
-            "message"=>"Attributes created successfully"
-        ],201);
-
+        $attr->type=$request->type;
+        $result=$attr->save();
+        if($result){
+            return response()->json([
+                "message"=>"Attribute created successfully"
+            ],201);
+        }
+        else{
+            return response()->json([
+                "message"=>"Attribute not created"
+            ],422);
+        }
     }
 }
 
