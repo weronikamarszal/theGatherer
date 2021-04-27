@@ -85,52 +85,58 @@ class ObjectController extends BaseController
         $object->collection_id=$values['collection_id'];
         $object->name=$values['name'];
         $object->photo_path=$values['photo_path'];
-        //$result1=$object->save();
+        $result=$object->save();
         dump($object->id);
         $cnt=0;
+        $nAttributes=count($values)-3;
         foreach ($values as $key => $value) {
             $cnt++;
-            if ($cnt<=3) continue;
-            dump($key .":". $value);
-            if(is_int($value)){
-                $valueIntObject=new ValueInt();
-                $valueIntObject->object_id=$object->id;
-                $valueIntObject->attribute_id=$object->id;
-                $valueIntObject->value=$value;
+            if ($cnt <= 3) continue;
+            dump($key . ":" . $value);
+            $attribute = ObjectAttributes::where('label', '=', $key)->
+            where('collection_id', '=', $object->collection_id)->firstOrFail();
+            dump($attribute);
+            if (is_int($value)) {
+                $valueIntObject = new ValueInt();
+                $valueIntObject->object_id = $object->id;
+                $valueIntObject->attribute_id = $attribute->id;
+                $valueIntObject->value = $value;
                 $valueIntObject->save();
             }
-            if(is_double($value)){
-                $valueFloatObject=new ValueFloat();
-                $valueFloatObject->object_id=$object->id;
-                $valueFloatObject->attribute_id=$object->id;
-                $valueFloatObject->value=$value;
+            if (is_double($value)) {
+                $valueFloatObject = new ValueFloat();
+                $valueFloatObject->object_id = $object->id;
+                $valueFloatObject->attribute_id = $attribute->id;
+                $valueFloatObject->value = $value;
                 $valueFloatObject->save();
             }
-            if (preg_match("/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/",$value)) {
-                $valueDateObject=new ValueDate();
-                $valueDateObject->object_id=$object->id;
-                $valueDateObject->attribute_id=$object->id;
-                $valueDateObject->value=$value;
-                $valueDateObject->save();
-            } else {
-                $valueStringObject=new ValueString();
-                $valueStringObject->object_id=$object->id;
-                $valueStringObject->attribute_id=$object->id;
-                $valueStringObject->value=$value;
-                $valueStringObject->save();
+            if(is_string($value)){
+                if (preg_match("/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/", $value)) {
+                    $valueDateObject = new ValueDate();
+                    $valueDateObject->object_id = $object->id;
+                    $valueDateObject->attribute_id = $attribute->id;
+                    $valueDateObject->value = $value;
+                    $valueDateObject->save();
+                } else {
+                    $valueStringObject = new ValueString();
+                    $valueStringObject->object_id = $object->id;
+                    $valueStringObject->attribute_id = $attribute->id;
+                    $valueStringObject->value = $value;
+                    $valueStringObject->save();
+                }
             }
-
+        dump($cnt);
         }
-//        if($result){
-//            return response()->json([
-//                "message"=>"Object created successfully"
-//            ],201);
-//        }
-//        else{
-//            return response()->json([
-//                "message"=>"Object not created"
-//            ],422);
-//        }
+        if($result && $cnt-3==$nAttributes){
+            return response()->json([
+                "message"=>"Object created successfully"
+            ],201);
+        }
+        else{
+            return response()->json([
+                "message"=>"Object not created"
+            ],422);
+        }
 
     }
 
