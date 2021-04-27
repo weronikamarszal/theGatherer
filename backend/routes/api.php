@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ImageUploadController;
 use App\Models\Objects;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
