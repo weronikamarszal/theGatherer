@@ -9,11 +9,10 @@ import {
 } from "react-router-dom";
 
 import {Col, Menu, Row} from 'antd';
-import {AppstoreOutlined, MailOutlined, SettingOutlined} from '@ant-design/icons';
-import {CollectionsList} from "./views/CollectionsList";
 import {AllCollections} from "./pages/AllCollections/AllCollections";
 import {MyCollections} from "./pages/MyCollections/MyCollections";
-import ThisCollection from './pages/ThisCollection/ThisCollection';
+import {Collection} from './pages/Collection/Collection';
+import {CollectionObject} from "./pages/CollectionObject/CollectionObject";
 
 const {SubMenu} = Menu;
 
@@ -39,17 +38,11 @@ class Sider extends React.Component {
           <Menu.Item key="3">
             <Link to="/my-collections">My collection</Link>
           </Menu.Item>
-          <Menu.Item key="4">
-            <Link to="/this-collection">This Collection</Link>
-          </Menu.Item>
         </Menu.ItemGroup>
       </Menu>
-
-
     );
   }
 }
-
 
 export default function App() {
   return (
@@ -68,8 +61,11 @@ export default function App() {
               <Route path="/my-collections">
                 <MyCollections/>
               </Route>
-              <Route path="/this-collection">
-                <ThisCollection/>
+              <Route path="/collection/:id">
+                <Collection/>
+              </Route>
+              <Route path="/object/:id">
+                <CollectionObject/>
               </Route>
             </Switch>
           </Col>
