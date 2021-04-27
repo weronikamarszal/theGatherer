@@ -5,6 +5,8 @@ import itemImage from '../../itemsImages/stampImage.png';
 class ThisCollection extends React.Component {
 
     render(){
+        let sortButtonSign = this.getSortButtonSign();
+        let buttonText = 'Sort by...';
 
         return(
             <div>
@@ -18,7 +20,7 @@ class ThisCollection extends React.Component {
                 </div>
                 <hr className='horizontalLine'/>
                 <div className="dropdown">
-                    <button className="dropbtn">Sort by...</button>
+                    <button className="dropbtn">{buttonText}</button>
                     <div className="dropdown-content">
                         <button className='sortButton'>Dimensions</button>
                         <button className='sortButton'>Material</button>
@@ -63,6 +65,11 @@ class ThisCollection extends React.Component {
             </div>
         );
     }
+
+    getSortButtonSign() {
+
+    }
+
 }
 
 
