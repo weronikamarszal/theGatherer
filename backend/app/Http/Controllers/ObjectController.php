@@ -6,6 +6,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Collection;
 use App\Models\ObjectAttributes;
+use App\Models\ValueDate;
+use App\Models\ValueFloat;
+use App\Models\ValueInt;
+use App\Models\ValueString;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -45,78 +49,6 @@ class ObjectController extends BaseController
         return $objToSend;
     }
 
-//    public function getObjects($collectionID)
-//    {
-//        // KODY TABELI:
-//        // 1- value_ints
-//        // 2- value_floats
-//        // 3- value_strings
-//        // 4- value_dates
-//        $objects = DB::table('objects')
-//            ->select('id', 'collection_id', 'name')
-//            ->where('collection_id',$collectionID)
-//            ->get();
-//        $objectAttributes = DB::table('object_attributes')
-//        ->select('id', 'collection_id', 'label','type')
-//        ->where('collection_id',$collectionID)
-//        ->get();
-//        $vals=[];
-//        $types=[];
-//        for($i=0;$i<sizeof($objectAttributes);$i++) {
-//            $attr = get_object_vars($objectAttributes[$i]);
-//            array_push($types, $attr['type']);
-//        }
-//
-//        $counter=sizeof(array_count_values($types));
-//        $numberOfTypes=array_count_values($types);
-//        $numberOfTypes=array_keys($numberOfTypes);
-//
-//        //dump($counter);
-//        for ($i=0;$i<sizeof($objects);$i++) {
-//            $obs = get_object_vars($objects[$i]);
-//            foreach ($numberOfTypes as $type) {
-//
-//                if ($type == 1) {
-//                    array_push($vals, DB::table('value_ints')
-//                        ->join('object_attributes', 'value_ints.attribute_id', '=', 'object_attributes.id')
-//                        ->select('object_attributes.label', 'value')
-//                        ->where('collection_id', $collectionID)
-//                        ->where('object_id', $obs['id'])
-//                        ->get());
-//                } elseif ($type == 2) {
-//                    array_push($vals, DB::table('value_floats')
-//                        ->join('object_attributes', 'value_floats.attribute_id', '=', 'object_attributes.id')
-//                        ->select('object_attributes.label', 'value')
-//                        ->where('collection_id', $collectionID)
-//                        ->where('object_id', $obs['id'])
-//                        ->get());
-//                } elseif ($type  == 3) {
-//                    array_push($vals, DB::table('value_strings')
-//                        ->join('object_attributes', 'value_strings.attribute_id', '=', 'object_attributes.id')
-//                        ->select('object_attributes.label', 'value')
-//                        ->where('collection_id', $collectionID)
-//                        ->where('object_id', $obs['id'])
-//                        ->get());
-//                } elseif ($type==4){
-//                    array_push($vals, DB::table('value_dates')
-//                        ->join('object_attributes', 'value_dates.attribute_id', '=', 'object_attributes.id')
-//                        ->select('object_attributes.label', 'value')
-//                        ->where('collection_id', $collectionID)
-//                        ->where('object_id', $obs['id'])
-//                        ->get());
-//                }
-//            }
-//        }
-//
-//        $response=[];
-//        $chunks=array_chunk($vals,sizeof($objects),true);
-//        for($i=0;$i<sizeof($objects);$i++){
-//            array_push($response,array_merge(get_object_vars($objects[$i]),$chunks[$i]));
-//        }
-//        //dump($response);
-//        $response=json_encode($response);
-//        return $response;
-//    }
 
     public function getObjects($collection_id){
         $objs=Collection::find($collection_id)->objects;
@@ -146,17 +78,60 @@ class ObjectController extends BaseController
     // 3- value_strings
     // 4- value_dates
     public function createObject(Request $request){
-        $deserialized=json_encode($request);
         // name, label, type,photo_path
         $object=new Objects;
-        $object->collection_id=$request->collection_id;
-        $object->name=$request->name;
-        $object->photo_path=$request->photo_path;
-        $result1=$object->save;
+        $values=$request->toArray();
+        //dump($values['collection_id']);
+        $object->collection_id=$values['collection_id'];
+        $object->name=$values['name'];
+        $object->photo_path=$values['photo_path'];
+        //$result1=$object->save();
+        dump($object->id);
+        $cnt=0;
+        foreach ($values as $key => $value) {
+            $cnt++;
+            if ($cnt<=3) continue;
+            dump($key .":". $value);
+            if(is_int($value)){
+                $valueIntObject=new ValueInt();
+                $valueIntObject->object_id=$object->id;
+                $valueIntObject->attribute_id=$object->id;
+                $valueIntObject->value=$value;
+                $valueIntObject->save();
+            }
+            if(is_double($value)){
+                $valueFloatObject=new ValueFloat();
+                $valueFloatObject->object_id=$object->id;
+                $valueFloatObject->attribute_id=$object->id;
+                $valueFloatObject->value=$value;
+                $valueFloatObject->save();
+            }
+            if (preg_match("/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/",$value)) {
+                $valueDateObject=new ValueDate();
+                $valueDateObject->object_id=$object->id;
+                $valueDateObject->attribute_id=$object->id;
+                $valueDateObject->value=$value;
+                $valueDateObject->save();
+            } else {
+                $valueStringObject=new ValueString();
+                $valueStringObject->object_id=$object->id;
+                $valueStringObject->attribute_id=$object->id;
+                $valueStringObject->value=$value;
+                $valueStringObject->save();
+            }
 
-        return response()->json([
-            "message"=>"Object created successfully"
-        ],201);
+        }
+//        if($result){
+//            return response()->json([
+//                "message"=>"Object created successfully"
+//            ],201);
+//        }
+//        else{
+//            return response()->json([
+//                "message"=>"Object not created"
+//            ],422);
+//        }
+
     }
 
     public function createAttributes(Request $request, $id){
