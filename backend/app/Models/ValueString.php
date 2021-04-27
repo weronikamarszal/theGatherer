@@ -8,4 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class ValueString extends Model
 {
     use HasFactory;
+    public function attributeName(){
+        return $this->hasOne(ObjectAttributes::class,'id','attribute_id');
+    }
 }
