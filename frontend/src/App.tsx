@@ -43,8 +43,8 @@ class Sider extends React.Component {
           <Menu.Item key="4">
             <Link to="/this-collection">This Collection</Link>
           </Menu.Item>
-          <Menu.Item key="4">
-            <Link to="/object">Object</Link>
+          <Menu.Item key="5">
+            <Link to="/object/1">Object</Link>
           </Menu.Item>
         </Menu.ItemGroup>
       </Menu>
@@ -75,7 +75,7 @@ export default function App() {
               <Route path="/this-collection">
                 <ThisCollection/>
               </Route>
-              <Route path="/object">
+              <Route path="/object/:id">
                 <CollectionObject/>
               </Route>
             </Switch>

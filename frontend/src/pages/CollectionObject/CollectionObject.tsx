@@ -1,23 +1,25 @@
 import {FunctionComponent, useEffect, useState} from "react";
 import {Button, Col, Divider, Row, Table} from "antd";
+import { useParams, useRouteMatch, } from 'react-router-dom';
 
 export const CollectionObject: FunctionComponent = () => {
 
-  // const [obejct, setObejct] = useState<any[]>([]);
-  // useEffect(() => {
-  //   const apiUrl = `http://127.0.0.1:8000/api/get-collections`;
-  //   fetch(apiUrl)
-  //     .then(res => res.json())
-  //     .then(res => {
-  //       setObejct(res)
-  //     })
-  // },);
+  let collectionId = useParams<any>();
 
+  const [collectionObject, setObject] = useState<any>({});
+  useEffect(() => {
+    const apiUrl = `http://127.0.0.1:8000/api/get-object/${collectionId.id}`;
+    fetch(apiUrl)
+      .then(res => res.json())
+      .then(res => {
+        setObject(res)
+      })
+  },[setObject]);
 
   const columns = [
     {
-      title: 'atributes',
-      dataIndex: 'atributes',
+      title: 'attribute',
+      dataIndex: 'attribute',
     },
     {
       title: 'value',
@@ -25,31 +27,35 @@ export const CollectionObject: FunctionComponent = () => {
     },
   ];
 
-  const data = [
-    {
-      atributes: 'Name of item',
-      value: 'Name',
-    },
-    {
-      atributes: 'Year of publishing',
-      value: '1976 year',
-    },
-  ];
+  const allAttributes = Object.keys(collectionObject)
+  const size = allAttributes.length;
+  const partialAttributes = allAttributes.slice(4-size)
+  const data = [];
+
+  partialAttributes.forEach(attribute => data.push({
+    attribute: attribute,
+    value: collectionObject[attribute]
+  }))
+
+
+  const photoPath = collectionObject.photo_path ? <img src={collectionObject.photo_path} /> : '';
 
   return <div>
     <Row>
       <Col span={12}>
-        <h1>Item name</h1>
+        <h1>
+          {collectionObject.name}
+        </h1>
       </Col>
       <Col span={12}>
         <Button type="primary" shape="round">Delete</Button>
       </Col>
     </Row>
     <Divider />
+    {photoPath}
 
-    <img src={'https://lh3.googleusercontent.com/proxy/BzvqfUbO3-_gH7GaRQYWqRKwdt72koF2QeSzEOrPtxzaOIjPVtEBKVmDzpor2yAfKjozxHqMJlDIqiJEbjCC_ffNwlEPiAblcl8lEn0MomWB2GI4f5uFS9fK3aNNc_KI8RGLRq79oDg'} />
     <p></p>
     <Table columns={columns} dataSource={data} />
-
   </div>;
+
 };
