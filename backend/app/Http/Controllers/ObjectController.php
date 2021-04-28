@@ -85,9 +85,7 @@ class ObjectController extends BaseController
         $collection->isPrivate=$request->isPrivate;
         $result=$collection->save();
         if($result){
-            return response()->json([
-                "message"=>"Collection created successfully"
-            ],201);
+            return response()->json($collection,201);
         }
         else{
             return response()->json([

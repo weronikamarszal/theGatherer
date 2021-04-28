@@ -14,6 +14,7 @@ import {MyCollections} from "./pages/MyCollections/MyCollections";
 import {Collection} from './pages/Collection/Collection';
 import {CollectionObject} from "./pages/CollectionObject/CollectionObject";
 import {AddCollectionObject} from "./pages/AddCollectionObject/AddCollectionObject";
+import {AddCollection} from "./pages/AddCollection/AddCollection";
 
 const {SubMenu} = Menu;
 
@@ -69,8 +70,10 @@ export default function App() {
                 <CollectionObject/>
               </Route>
               <Route path="/:id/add-object">
-                <AddCollectionObject
-                />
+                <AddCollectionObject/>
+              </Route>
+              <Route path="/add-collection">
+                <AddCollection/>
               </Route>
             </Switch>
           </Col>
