@@ -12,5 +12,7 @@ class Collection extends Model
     public function objects(){
         return $this->hasMany(Objects::class);
     }
-
+    public function attributes(){
+        return $this->hasMany(ObjectAttributes::class);
+    }
 }
