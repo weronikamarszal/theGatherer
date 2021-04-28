@@ -168,21 +168,35 @@ class ObjectController extends BaseController
 
     public function createAttributes(Request $request, $id){
         //collection_id,label, type
-        $attr=new ObjectAttributes;
-        $attr->collection_id=$id;
-        $attr->label=$request->label;
-        $attr->type=$request->type;
-        $result=$attr->save();
-        if($result){
+        $values=$request->toArray();
+        $insertSuccess=0;
+        foreach ($values as $attribute)
+        {
+            dump($attribute);
+            $attr=new ObjectAttributes;
+            $attr->collection_id=$id;
+            $attr->label=$attribute['label'];
+            $attr->type=$attribute['type'];
+            $result=$attr->save();
+            if($result){
+                $insertSuccess++;
+            }
+        }
+//        $attr=new ObjectAttributes;
+//        $attr->collection_id=$id;
+//        $attr->label=$request->label;
+//        $attr->type=$request->type;
+//        $result=$attr->save();
+        if($insertSuccess==count($values)){
             return response()->json([
-                "message"=>"Attribute created successfully"
+                "message"=>"Attributes created successfully"
             ],201);
         }
         else{
             return response()->json([
-                "message"=>"Attribute not created"
+                "message"=>"Attributes not created"
             ],422);
         }
-    }
+   }
 }
 
