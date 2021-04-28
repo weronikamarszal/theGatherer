@@ -39,6 +39,7 @@ Route::get('/get-object/{id}',function($id){
 });
 
 Route::post('/add-object',[ ObjectController::class,'createObject']);
+Route::post('/add-object',[ ObjectController::class,'createObject']);
 Route::post('/create-attributes/{id}',[ ObjectController::class,'createAttributes']);
 
 
