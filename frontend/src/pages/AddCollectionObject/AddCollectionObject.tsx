@@ -8,21 +8,10 @@ const layout = {
   wrapperCol: {span: 8},
 };
 
-function getMockAttributes(collectionId: number) {
-  return Promise.resolve([
-    {
-      label: 'Szerokosc',
-      type: 2
-    },
-    {
-      label: 'Wysokosc',
-      type: 2
-    },
-    {
-      label: 'Data wydania',
-      type: 4
-    }
-  ])
+function getAttributes(collectionId: number) {
+  const apiUrl = `/api/get-collection-attributes/${collectionId}`;
+  return fetch(apiUrl)
+    .then(res => res.json())
 }
 
 export const AttributeFormItem: FunctionComponent<{ attribute: any }> = ({attribute}) => {
@@ -58,15 +47,16 @@ export const AddCollectionObject: FunctionComponent = () => {
 
   const onFinish = (values: any) => {
     values.collection_id = collectionId;
+    values.photo_path = "NULL"
     console.log('Success:', values);
-    fetch('http://127.0.0.1:8000/api/add-object', {method: 'post', body: JSON.stringify(values)})
+    fetch('/api/add-object', {method: 'post', body: JSON.stringify(values), headers: {"Content-Type": "application/json"}})
       .then(res => res.json())
       .then(console.log)
   };
 
   const [collectionAttributes, setCollectionAttributes] = useState<any[]>([]);
   useEffect(() => {
-    getMockAttributes(collectionId)
+    getAttributes(collectionId)
       .then(res => {
         setCollectionAttributes(res)
       })

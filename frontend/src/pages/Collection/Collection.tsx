@@ -10,7 +10,7 @@ export const Collection: FunctionComponent = () => {
 
   const [collectionItems, setCollectionsItems] = useState<any[]>([]);
   useEffect(() => {
-    const apiUrl = `http://127.0.0.1:8000/api/get-collection-objects/${params.id}`;
+    const apiUrl = `/api/get-collection-objects/${params.id}`;
     fetch(apiUrl)
       .then(res => res.json())
       .then(res => {
