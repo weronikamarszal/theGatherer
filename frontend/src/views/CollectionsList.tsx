@@ -1,5 +1,6 @@
-import {FunctionComponent, useEffect, useState} from "react";
+import React, {FunctionComponent, useEffect, useState} from "react";
 import {Table, Tag, Space} from 'antd';
+import {Link} from "react-router-dom";
 
 export const CollectionsList: FunctionComponent<{ onDelete?: () => void, collectionsList: any[]}> = (props) => {
   const columns = [
@@ -14,7 +15,7 @@ export const CollectionsList: FunctionComponent<{ onDelete?: () => void, collect
       key: 'action',
       render: (text: any, record: any) => (
         <Space size="large">
-          <a> Show </a>
+          <Link to={`/collection/${record.id}`}> Show </Link>
           <a> Raport </a>
           {props.onDelete && <a> Delete </a>}
         </Space>

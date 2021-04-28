@@ -11,7 +11,7 @@ export const AllCollections: FunctionComponent = () => {
       .then(res => {
         setCollectionsList(res)
       })
-  },);
+  },[setCollectionsList]);
 
   return <div>
     <h1>THE GATHERER</h1>
