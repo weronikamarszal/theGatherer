@@ -69,7 +69,8 @@ export default function App() {
                 <CollectionObject/>
               </Route>
               <Route path="/:id/add-object">
-                <AddCollectionObject/>
+                <AddCollectionObject
+                />
               </Route>
             </Switch>
           </Col>

@@ -1,8 +1,9 @@
 import React, {FunctionComponent, useEffect, useState} from 'react';
 import '../../index.css';
-import itemImage from '../../itemsImages/stampImage.png';
 import {CollectionsList} from "../../views/CollectionsList";
 import {Link, useParams} from "react-router-dom";
+import {Button, Col, Row} from "antd";
+import './Collection.css'
 
 export const Collection: FunctionComponent = () => {
   let params = useParams<any>();
@@ -25,7 +26,7 @@ export const Collection: FunctionComponent = () => {
           <h1>This collection</h1>
         </div>
         <div className='addButtonWrapper'>
-          <button className='addCollectionButton'> <Link to={`/${params.id}/add-object`}> Add Item </Link> </button>
+          <button className='addCollectionButton'><Link to={`/${params.id}/add-object`}> Add Item </Link></button>
         </div>
       </div>
       <hr className='horizontalLine'/>
@@ -38,17 +39,20 @@ export const Collection: FunctionComponent = () => {
           <button className='sortButton'>Standard</button>
         </div>
       </div>
-      <div className='itemsList'>
+      <Row>
         {collectionItems.map((item) =>
-          <div className='item'>
-            <img className='itemImage' src={item.photo_path} alt="itemImage"/>
-            <div className='itemDescription'>
-              {item.name}
+          <Col span={8} className='collection-item-wrapper'>
+            <div className='collection-item'>
+              <img className='itemImage' src={item.photo_path} alt="itemImage"/>
+              <div className='itemDescription'>
+                {item.name}
+              </div>
+              <Button type="primary"><Link to={`/object/${item.id}`}> View </Link></Button>
             </div>
-            <button className='viewItem'> <Link to={`/object/${item.id}`}> View </Link></button>
-          </div>
+          </Col>
         )}
-      </div>
+      </Row>
+
     </div>
   </>
 };
