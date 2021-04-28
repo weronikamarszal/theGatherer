@@ -5,6 +5,9 @@ import {Link, useParams} from "react-router-dom";
 import {Button, Col, Row} from "antd";
 import './Collection.css'
 
+let link = "C:\\Users\\Danila\\Desktop\\InternetApplications\\theGatherer\\backend\\public\\uploads\\images\\photo1.jpg";
+console.log(link);
+
 export const Collection: FunctionComponent = () => {
   let params = useParams<any>();
 
