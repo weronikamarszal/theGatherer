@@ -1,0 +1,56 @@
+
+.itemsList {
+    width: 90%;
+    height: 80%;
+    margin: 3% auto;
+    display: flex;
+    justify-content: space-between;
+}
+
+.item {
+    width: 25%;
+    height: 30%;
+    margin: 2% auto 2% auto;
+    background-color: #EAF7F7;
+    border-radius: 3%;
+    transition: transform .3s;
+}
+
+.item:hover {
+    transform: scale(1.02);
+    box-shadow: 0 0 8px 1pt #EAF7F7;
+    -moz-box-shadow: 0 0 8px 1pt #EAF7F7;
+    -webkit-box-shadow: 0 0 8px 1pt #EAF7F7;
+}
+
+.itemImage {
+    width: 90%;
+    height: 60%;
+    margin: 6% auto 2% auto;
+}
+
+.itemDescription {
+    width: 80%;
+    margin: 4% auto 2% auto;
+    font-size: 20px;
+}
+
+.viewItem {
+    width: 30%;
+    height: 15%;
+    margin: 4% auto 6% auto;
+    background-color: #1a202c;
+    color: #cbd5e0;
+    font-size: 14px;
+    border-radius: 12px;
+    border: none;
+}
+
+.collection-item {
+    border: 1px solid;
+    padding: 1em;
+}
+
+.collection-item-wrapper {
+    padding: 1em;
+}

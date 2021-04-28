@@ -45,6 +45,7 @@ Route::get('/get-object/{id}',function($id){
 
 Route::post('/create-collection',[ ObjectController::class,'createCollection']);
 Route::post('/add-object',[ ObjectController::class,'createObject']);
+Route::post('/add-object',[ ObjectController::class,'createObject']);
 Route::post('/create-attributes/{id}',[ ObjectController::class,'createAttributes']);
 
 Route::get('/image-upload', [ ImageUploadController::class, 'imageUpload' ])->name('image.upload');

@@ -8,7 +8,7 @@ export const CollectionObject: FunctionComponent = () => {
 
   const [collectionObject, setObject] = useState<any>({});
   useEffect(() => {
-    const apiUrl = `http://127.0.0.1:8000/api/get-object/${collectionId.id}`;
+    const apiUrl = `/api/get-object/${collectionId.id}`;
     fetch(apiUrl)
       .then(res => res.json())
       .then(res => {
@@ -32,7 +32,7 @@ export const CollectionObject: FunctionComponent = () => {
   const partialAttributes = allAttributes.slice(4-size)
   const data = [];
 
-  partialAttributes.forEach(attribute => data.push({
+  allAttributes.forEach(attribute => data.push({
     attribute: attribute,
     value: collectionObject[attribute]
   }))

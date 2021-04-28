@@ -1,16 +1,17 @@
 import React, {FunctionComponent, useEffect, useState} from 'react';
 import '../../index.css';
-import itemImage from '../../itemsImages/stampImage.png';
 import {CollectionsList} from "../../views/CollectionsList";
 import {Link, useParams} from "react-router-dom";
+import {Button, Col, Row} from "antd";
+import './Collection.css'
 
 export const Collection: FunctionComponent = () => {
-  let collectionId = useParams<any>();
+  let params = useParams<any>();
 
 
   const [collectionItems, setCollectionsItems] = useState<any[]>([]);
   useEffect(() => {
-    const apiUrl = `http://127.0.0.1:8000/api/get-collection-objects/${collectionId.id}`;
+    const apiUrl = `/api/get-collection-objects/${params.id}`;
     fetch(apiUrl)
       .then(res => res.json())
       .then(res => {
@@ -25,7 +26,7 @@ export const Collection: FunctionComponent = () => {
           <h1>This collection</h1>
         </div>
         <div className='addButtonWrapper'>
-          <button className='addCollectionButton'>Add Item</button>
+          <button className='addCollectionButton'><Link to={`/${params.id}/add-object`}> Add Item </Link></button>
         </div>
       </div>
       <hr className='horizontalLine'/>
@@ -38,17 +39,20 @@ export const Collection: FunctionComponent = () => {
           <button className='sortButton'>Standard</button>
         </div>
       </div>
-      <div className='itemsList'>
+      <Row>
         {collectionItems.map((item) =>
-          <div className='item'>
-            <img className='itemImage' src={item.photo_path} alt="itemImage"/>
-            <div className='itemDescription'>
-              {item.name}
+          <Col span={8} className='collection-item-wrapper'>
+            <div className='collection-item'>
+              <img className='itemImage' src={item.photo_path} alt="itemImage"/>
+              <div className='itemDescription'>
+                {item.name}
+              </div>
+              <Button type="primary"><Link to={`/object/${item.id}`}> View </Link></Button>
             </div>
-            <button className='viewItem'> <Link to={`/object/${item.id}`}> View </Link></button>
-          </div>
+          </Col>
         )}
-      </div>
+      </Row>
+
     </div>
   </>
 };

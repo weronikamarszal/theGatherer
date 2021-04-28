@@ -5,7 +5,7 @@ export const AllCollections: FunctionComponent = () => {
 
   const [collectionsList, setCollectionsList] = useState<any[]>([]);
   useEffect(() => {
-    const apiUrl = `http://127.0.0.1:8000/api/get-collections`;
+    const apiUrl = `/api/get-collections`;
     fetch(apiUrl)
       .then(res => res.json())
       .then(res => {
