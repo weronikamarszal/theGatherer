@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ImageUploadController;
 use App\Models\Objects;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -46,6 +47,8 @@ Route::post('/create-collection',[ ObjectController::class,'createCollection']);
 Route::post('/add-object',[ ObjectController::class,'createObject']);
 Route::post('/create-attributes/{id}',[ ObjectController::class,'createAttributes']);
 
+Route::get('/image-upload', [ ImageUploadController::class, 'imageUpload' ])->name('image.upload');
+Route::post('/image-upload', [ ImageUploadController::class, 'imageUploadPost' ])->name('image.upload.post');
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
