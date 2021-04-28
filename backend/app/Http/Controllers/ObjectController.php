@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\Http\Controllers;
-
 
 use App\Models\Collection;
 use App\Models\ObjectAttributes;
@@ -10,16 +8,18 @@ use App\Models\ValueDate;
 use App\Models\ValueFloat;
 use App\Models\ValueInt;
 use App\Models\ValueString;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Objects;
-
-
-
+use App\Traits\UploadTrait;
+use Illuminate\Support\Str;
 
 class ObjectController extends BaseController
 {
+    use UploadTrait;
+
     public function getValues($obj,$objToSend){
         if($obj->valueFloats){
             foreach($obj->valueFloats as $value){
@@ -101,7 +101,16 @@ class ObjectController extends BaseController
         //dump($values['collection_id']);
         $object->collection_id=$values['collection_id'];
         $object->name=$values['name'];
-        $object->photo_path=$values['photo_path'];
+
+        if ($request->has('item_image')) {
+            $image = $request->file('item_image');
+            $name = Str::slug($request->input('name')).'_'.time();
+            $folder = '/uploads/images/';
+            $filePath = $folder . $name. '.' . $image->getClientOriginalExtension();
+            $this->uploadOne($image, $folder, 'public', $name);
+            $object->photo_path=$filePath;
+        }
+
         $result=$object->save();
         //dump($object->id);
         $cnt=0;
