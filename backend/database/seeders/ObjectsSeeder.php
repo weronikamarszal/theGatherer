@@ -16,10 +16,10 @@ class ObjectsSeeder extends Seeder
     public function run()
     {
         $values=[
-            ['id'=>1,'collection_id'=>1,'name'=>'Szabla polska'],
-            ['id'=>2,'collection_id'=>1,'name'=>'Miecz Pana Wolodyjowskiego'],
-            ['id'=>3,'collection_id'=>2,'name'=>'Znaczek z Tyrolu'],
-            ['id'=>4,'collection_id'=>2,'name'=>'Znaczek z Brama Brandenburska'],
+            ['id'=>1,'collection_id'=>1,'name'=>'Szabla polska', 'photo_path' => ''],
+            ['id'=>2,'collection_id'=>1,'name'=>'Miecz Pana Wolodyjowskiego', 'photo_path' => ''],
+            ['id'=>3,'collection_id'=>2,'name'=>'Znaczek z Tyrolu', 'photo_path' => ''],
+            ['id'=>4,'collection_id'=>2,'name'=>'Znaczek z Brama Brandenburska', 'photo_path' => ''],
         ];
         DB::table('objects')->insert($values);
 
