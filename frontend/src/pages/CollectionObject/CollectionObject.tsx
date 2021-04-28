@@ -32,7 +32,7 @@ export const CollectionObject: FunctionComponent = () => {
   const partialAttributes = allAttributes.slice(4-size)
   const data = [];
 
-  partialAttributes.forEach(attribute => data.push({
+  allAttributes.forEach(attribute => data.push({
     attribute: attribute,
     value: collectionObject[attribute]
   }))
