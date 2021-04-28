@@ -72,21 +72,40 @@ class ObjectController extends BaseController
         }
 
     }
-    // KODY TABELI:
-    // 1- value_ints
-    // 2- value_floats
-    // 3- value_strings
-    // 4- value_dates
+
+    public function getAttributes($id){
+        $attributes=Collection::find($id)->attributes;
+        return $attributes;
+    }
+    public function createCollection(Request $request){
+        //collection_id,label, type
+        $collection=new Collection();
+        $collection->name=$request->name;
+        $collection->description=$request->description;
+        $collection->isPrivate=$request->isPrivate;
+        $result=$collection->save();
+        if($result){
+            return response()->json([
+                "message"=>"Collection created successfully"
+            ],201);
+        }
+        else{
+            return response()->json([
+                "message"=>"Collection not created"
+            ],422);
+        }
+    }
     public function createObject(Request $request){
         // name, label, type,photo_path
         $object=new Objects;
         $values=$request->toArray();
+        //dump($values);
         //dump($values['collection_id']);
         $object->collection_id=$values['collection_id'];
         $object->name=$values['name'];
         $object->photo_path=$values['photo_path'];
         $result=$object->save();
-        dump($object->id);
+        //dump($object->id);
         $cnt=0;
         $nAttributes=count($values)-3;
         foreach ($values as $key => $value) {
@@ -125,7 +144,7 @@ class ObjectController extends BaseController
                     $valueStringObject->save();
                 }
             }
-        dump($cnt);
+        //dump($cnt);
         }
         if($result && $cnt-3==$nAttributes){
             return response()->json([

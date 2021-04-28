@@ -27,6 +27,10 @@ Route::get('/get-collections/{collection}', function(Collection $collection){
 //    $objects=$obj->getObjects($id);
 //    return $objects;
 //});
+Route::get('/get-collection-attributes/{id}',function($id){
+   $obj=new ObjectController();
+   return $obj->getAttributes($id);
+});
 Route::get('/get-collection-objects/{id}', function($id){
     $obj=new ObjectController();
     $objects=$obj->getObjects($id);
@@ -38,6 +42,7 @@ Route::get('/get-object/{id}',function($id){
     return $obj->getObject($id,true);
 });
 
+Route::post('/create-collection',[ ObjectController::class,'createCollection']);
 Route::post('/add-object',[ ObjectController::class,'createObject']);
 Route::post('/create-attributes/{id}',[ ObjectController::class,'createAttributes']);
 
