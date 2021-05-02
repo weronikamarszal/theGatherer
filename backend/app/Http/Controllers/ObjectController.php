@@ -110,50 +110,46 @@ class ObjectController extends BaseController
             $this->uploadOne($image, $folder, 'public', $name);
             $object->photo_path=$filePath;
         }
-
         $result=$object->save();
-        //dump($object->id);
         $cnt=0;
-        $nAttributes=count($values)-3;
-        foreach ($values as $key => $value) {
+        $nAttributes=count($values['attributes']);
+        //dump($nAttributes,$values['attributes']);
+        foreach ($values['attributes'] as $attribute) {
             $cnt++;
-            if ($cnt <= 3) continue;
-            dump($key . ":" . $value);
-            $attribute = ObjectAttributes::where('label', '=', $key)->
-            where('collection_id', '=', $object->collection_id)->firstOrFail();
-            dump($attribute);
-            if (is_int($value)) {
+            //dump($attribute['id']);
+            $attributeObject = ObjectAttributes::find($attribute['id']);
+            //dump($attributeObject);
+            if ($attributeObject->type==ObjectAttributes::TYPE_INT) {
                 $valueIntObject = new ValueInt();
                 $valueIntObject->object_id = $object->id;
-                $valueIntObject->attribute_id = $attribute->id;
-                $valueIntObject->value = $value;
+                $valueIntObject->attribute_id = $attributeObject->id;
+                $valueIntObject->value = $attribute['value'];
                 $valueIntObject->save();
             }
-            if (is_double($value)) {
+            else if ($attributeObject->type==ObjectAttributes::TYPE_FLOAT) {
                 $valueFloatObject = new ValueFloat();
                 $valueFloatObject->object_id = $object->id;
-                $valueFloatObject->attribute_id = $attribute->id;
-                $valueFloatObject->value = $value;
+                $valueFloatObject->attribute_id = $attributeObject->id;
+                $valueFloatObject->value = $attribute['value'];
                 $valueFloatObject->save();
             }
-            if(is_string($value)){
-                if (preg_match("/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/", $value)) {
-                    $valueDateObject = new ValueDate();
-                    $valueDateObject->object_id = $object->id;
-                    $valueDateObject->attribute_id = $attribute->id;
-                    $valueDateObject->value = $value;
-                    $valueDateObject->save();
-                } else {
-                    $valueStringObject = new ValueString();
-                    $valueStringObject->object_id = $object->id;
-                    $valueStringObject->attribute_id = $attribute->id;
-                    $valueStringObject->value = $value;
-                    $valueStringObject->save();
-                }
+            else if ($attributeObject->type==ObjectAttributes::TYPE_DATE) {
+                $valueDateObject = new ValueDate();
+                $valueDateObject->object_id = $object->id;
+                $valueDateObject->attribute_id = $attributeObject->id;
+                $valueDateObject->value = $attribute['value'];
+                $valueDateObject->save();
             }
-        //dump($cnt);
+            else if ($attributeObject->type==ObjectAttributes::TYPE_STRING) {
+                $valueStringObject = new ValueString();
+                $valueStringObject->object_id = $object->id;
+                $valueStringObject->attribute_id = $attributeObject->id;
+                $valueStringObject->value = $attribute['value'];
+                $valueStringObject->save();
+            }
         }
-        if($result && $cnt-3==$nAttributes){
+        //dump($cnt);
+        if($result && $cnt==$nAttributes){
             return response()->json([
                 "message"=>"Object created successfully"
             ],201);
@@ -182,11 +178,6 @@ class ObjectController extends BaseController
                 $insertSuccess++;
             }
         }
-//        $attr=new ObjectAttributes;
-//        $attr->collection_id=$id;
-//        $attr->label=$request->label;
-//        $attr->type=$request->type;
-//        $result=$attr->save();
         if($insertSuccess==count($values)){
             return response()->json([
                 "message"=>"Attributes created successfully"
