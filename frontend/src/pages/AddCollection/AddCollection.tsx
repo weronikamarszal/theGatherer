@@ -1,8 +1,9 @@
 import {FunctionComponent, useEffect, useState} from "react";
-import {Button, Checkbox, Divider, Form, Input, Select} from "antd";
+import {Button, Checkbox, Divider, Form, Input, Select, Space} from "antd";
 import {AttributeFormItem} from "../AddCollectionObject/AddCollectionObject";
 import {AttributeType} from "../../types/attributeType";
 import {useHistory} from "react-router-dom";
+import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 
 const layout = {
   labelCol: {span: 8},
@@ -28,14 +29,13 @@ function createCollection(collection, attributes) {
     .then(res => {
       console.log(res);
     })
-
 }
 
 export const AddCollection: FunctionComponent = () => {
   const history = useHistory();
   const onFinish = (values: any) => {
     console.log('Success:', values);
-    createCollection(values.collection, values.attribute)
+    createCollection(values.collection, values.attributes)
       .then(() => history.push(`/all-collections`))
   };
 
@@ -73,25 +73,48 @@ export const AddCollection: FunctionComponent = () => {
       </Form.Item>
 
       <Divider>Attributes</Divider>
-      <Form.Item
-        label='Name'
-        name={['attribute','label']}
-        rules={[{required: true}]}
-      >
-        <Input/>
-      </Form.Item>
-      <Form.Item
-        label='Type'
-        name={['attribute','type']}
-        rules={[{required: true}]}
-      >
-        <Select>
-          <Select.Option value={AttributeType.STRING}>Text</Select.Option>
-          <Select.Option value={AttributeType.INT}>Integer</Select.Option>
-          <Select.Option value={AttributeType.FLOAT}>Float</Select.Option>
-          <Select.Option value={AttributeType.DATE}>Date</Select.Option>
-        </Select>
-      </Form.Item>
+
+      <Form.List name="attributes">
+        {(fields, { add, remove }) => (
+          <>
+            {fields.map(({ key, name, fieldKey, ...restField }) => (
+              <Space key={key} style={{ display: 'flex', marginBottom: 8 }} align="baseline">
+                <Form.Item
+                  {...restField}
+                  label='Name'
+                  name={[name, 'label']}
+                  fieldKey={[fieldKey, 'label']}
+                  rules={[{ required: true}]}
+                >
+                  <Input/>
+                </Form.Item>
+
+                <Form.Item
+                  {...restField}
+                  label='Type'
+                  name={[name, 'type']}
+                  fieldKey={[fieldKey, 'type']}
+                  rules={[{ required: true}]}
+                >
+                  <Select>
+                    <Select.Option value={AttributeType.STRING}>Text</Select.Option>
+                    <Select.Option value={AttributeType.INT}>Integer</Select.Option>
+                    <Select.Option value={AttributeType.FLOAT}>Float</Select.Option>
+                    <Select.Option value={AttributeType.DATE}>Date</Select.Option>
+                  </Select>
+                </Form.Item>
+
+                <MinusCircleOutlined onClick={() => remove(name)} />
+              </Space>
+            ))}
+            <Form.Item>
+              <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
+                Add field
+              </Button>
+            </Form.Item>
+          </>
+        )}
+      </Form.List>
 
       <Form.Item>
         <Button type="primary" htmlType="submit">
