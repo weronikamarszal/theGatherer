@@ -2,6 +2,7 @@ import {FunctionComponent, useEffect, useState} from "react";
 import {Button, Checkbox, Divider, Form, Input, Select} from "antd";
 import {AttributeFormItem} from "../AddCollectionObject/AddCollectionObject";
 import {AttributeType} from "../../types/attributeType";
+import {useHistory} from "react-router-dom";
 
 const layout = {
   labelCol: {span: 8},
@@ -9,7 +10,7 @@ const layout = {
 };
 
 function createCollection(collection, attributes) {
-  fetch('/api/create-collection/', {
+  return fetch('/api/create-collection/', {
     method: 'post',
     body: JSON.stringify(collection),
     headers: {"Content-Type": "application/json"}
@@ -31,9 +32,11 @@ function createCollection(collection, attributes) {
 }
 
 export const AddCollection: FunctionComponent = () => {
+  const history = useHistory();
   const onFinish = (values: any) => {
     console.log('Success:', values);
     createCollection(values.collection, values.attribute)
+      .then(() => history.push(`/all-collections`))
   };
 
   return <div>

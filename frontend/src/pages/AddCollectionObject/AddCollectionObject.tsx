@@ -1,11 +1,20 @@
-import {FunctionComponent, useEffect, useState} from "react";
-import {useParams} from "react-router-dom";
-import {Button, DatePicker, Form, Input, InputNumber} from "antd";
+import {Component, FunctionComponent, useEffect, useState} from "react";
+import {useHistory, useParams} from "react-router-dom";
+import {Button, DatePicker, Form, Input, InputNumber, Upload} from "antd";
 import {AttributeType} from "../../types/attributeType";
+import {UploadOutlined} from '@ant-design/icons';
 
 const layout = {
   labelCol: {span: 8},
   wrapperCol: {span: 8},
+};
+
+const normFile = (e: any) => {
+  console.log('Upload event:', e);
+  if (Array.isArray(e)) {
+    return e;
+  }
+  return e && e.fileList;
 };
 
 function getAttributes(collectionId: number) {
@@ -41,17 +50,36 @@ export const AttributeFormItem: FunctionComponent<{ attribute: any }> = ({attrib
   }
 }
 
+
 export const AddCollectionObject: FunctionComponent = () => {
   let params = useParams<any>();
+  const history = useHistory();
   const collectionId = Number(params.id)
 
   const onFinish = (values: any) => {
-    values.collection_id = collectionId;
-    values.photo_path = "NULL"
-    console.log('Success:', values);
-    fetch('/api/add-object', {method: 'post', body: JSON.stringify(values), headers: {"Content-Type": "application/json"}})
+    let formdata = new FormData();
+
+    formdata.append("collection_id", collectionId.toString());
+    formdata.append("name", values.name);
+    formdata.append("item_image", values.upload[0].originFileObj, values.upload[0].name);
+    collectionAttributes.map((attribute) => ({"id": attribute.id, name: attribute.label, value: null}));
+    formdata.append("attributes", JSON.stringify(collectionAttributes.map((attribute) => ({
+      id: attribute.id,
+      name: attribute.label,
+      value: values[attribute.label],
+    }))));
+    console.log(values);
+
+    fetch('/api/add-object', {
+      method: 'POST',
+      body: formdata,
+      redirect: 'follow',
+    })
       .then(res => res.json())
       .then(console.log)
+      .then(() => history.push(`/collection/${collectionId}`))
+
+
   };
 
   const [collectionAttributes, setCollectionAttributes] = useState<any[]>([]);
@@ -75,6 +103,17 @@ export const AddCollectionObject: FunctionComponent = () => {
       >
         <Input/>
       </Form.Item>
+
+      <Form.Item
+        name="upload"
+        label="Upload"
+        valuePropName="fileList"
+        getValueFromEvent={normFile}
+      >
+        <Upload name="logo" beforeUpload={() => false} listType="picture">
+          <Button icon={<UploadOutlined/>}>Click to upload</Button>
+        </Upload>
+      </Form.Item>
       {
         collectionAttributes.map(attribute => <AttributeFormItem attribute={attribute}/>)
       }
@@ -84,7 +123,6 @@ export const AddCollectionObject: FunctionComponent = () => {
         </Button>
       </Form.Item>
     </Form>
-
 
   </div>;
 };
