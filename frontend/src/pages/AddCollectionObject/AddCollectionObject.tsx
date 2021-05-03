@@ -58,14 +58,10 @@ export const AddCollectionObject: FunctionComponent = () => {
 
   const onFinish = (values: any) => {
     let formdata = new FormData();
-    let requestOptions = {
-      method: 'POST',
-      body: formdata,
-    };
 
     formdata.append("collection_id", collectionId.toString());
     formdata.append("name", values.name);
-    formdata.append("item_image", values.upload[0].originFileObj, "[PROXY]");
+    formdata.append("item_image", values.upload[0].originFileObj, values.upload[0].name);
     collectionAttributes.map((attribute) => ({"id": attribute.id, name: attribute.label, value: null}));
     formdata.append("attributes", JSON.stringify(collectionAttributes.map((attribute) => ({
       id: attribute.id,
@@ -74,7 +70,11 @@ export const AddCollectionObject: FunctionComponent = () => {
     }))));
     console.log(values);
 
-    fetch('/api/add-object', requestOptions)
+    fetch('/api/add-object', {
+      method: 'POST',
+      body: formdata,
+      redirect: 'follow',
+    })
       .then(res => res.json())
       .then(console.log)
       .then(() => history.push(`/collection/${collectionId}`))
