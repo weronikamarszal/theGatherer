@@ -3,6 +3,12 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import moment from 'moment';
+
+// default format of dates
+moment().constructor.prototype.toJSON = function () {
+  return this.format("YYYY-MM-DD")
+}
 
 ReactDOM.render(
   <React.StrictMode>

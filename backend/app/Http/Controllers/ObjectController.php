@@ -172,7 +172,7 @@ class ObjectController extends BaseController
         $values = $request->toArray();
         $insertSuccess = 0;
         foreach ($values as $attribute) {
-            dump($attribute);
+//             dump($attribute);
             $attr = new ObjectAttributes;
             $attr->collection_id = $id;
             $attr->label = $attribute['label'];

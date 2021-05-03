@@ -16,8 +16,6 @@ import {CollectionObject} from "./pages/CollectionObject/CollectionObject";
 import {AddCollectionObject} from "./pages/AddCollectionObject/AddCollectionObject";
 import {AddCollection} from "./pages/AddCollection/AddCollection";
 
-const {SubMenu} = Menu;
-
 class Sider extends React.Component {
 
   render() {
