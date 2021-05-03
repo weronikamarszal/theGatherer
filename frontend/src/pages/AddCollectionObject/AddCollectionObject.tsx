@@ -1,5 +1,5 @@
 import {Component, FunctionComponent, useEffect, useState} from "react";
-import {useParams} from "react-router-dom";
+import {useHistory, useParams} from "react-router-dom";
 import {Button, DatePicker, Form, Input, InputNumber, Upload} from "antd";
 import {AttributeType} from "../../types/attributeType";
 import {UploadOutlined} from '@ant-design/icons';
@@ -53,6 +53,7 @@ export const AttributeFormItem: FunctionComponent<{ attribute: any }> = ({attrib
 
 export const AddCollectionObject: FunctionComponent = () => {
   let params = useParams<any>();
+  const history = useHistory();
   const collectionId = Number(params.id)
 
   const onFinish = (values: any) => {
@@ -64,7 +65,7 @@ export const AddCollectionObject: FunctionComponent = () => {
 
     formdata.append("collection_id", collectionId.toString());
     formdata.append("name", values.name);
-    // formdata.append("item_image", values.upload[0].originFileObj, "[PROXY]");
+    formdata.append("item_image", values.upload[0].originFileObj, "[PROXY]");
     collectionAttributes.map((attribute) => ({"id": attribute.id, name: attribute.label, value: null}));
     formdata.append("attributes", JSON.stringify(collectionAttributes.map((attribute) => ({
       id: attribute.id,
@@ -76,6 +77,9 @@ export const AddCollectionObject: FunctionComponent = () => {
     fetch('/api/add-object', requestOptions)
       .then(res => res.json())
       .then(console.log)
+      .then(() => history.push(`/collection/${collectionId}`))
+
+
   };
 
   const [collectionAttributes, setCollectionAttributes] = useState<any[]>([]);
@@ -119,7 +123,6 @@ export const AddCollectionObject: FunctionComponent = () => {
         </Button>
       </Form.Item>
     </Form>
-
 
   </div>;
 };
