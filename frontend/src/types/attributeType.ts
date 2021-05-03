@@ -1,6 +1,6 @@
 export enum AttributeType {
-  STRING = 1,
+  STRING = 3,
   FLOAT = 2,
-  INT = 3,
+  INT = 1,
   DATE = 4,
 }
