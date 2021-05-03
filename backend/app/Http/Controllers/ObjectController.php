@@ -105,7 +105,7 @@ class ObjectController extends BaseController
         if ($request->has('item_image')) {
             $image = $request->file('item_image');
             $name = Str::slug($request->input('name')).'_'.time();
-            $folder = '/uploads/images/' . $object->collection_id;;
+            $folder = '/uploads/images/' . $object->collection_id;
             $filePath = $folder . $name. '.' . $image->getClientOriginalExtension();
             $this->uploadOne($image, $folder, 'public', $name);
             $object->photo_path=$filePath;
