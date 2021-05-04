@@ -110,7 +110,7 @@ export const AddCollectionObject: FunctionComponent = () => {
         valuePropName="fileList"
         getValueFromEvent={normFile}
       >
-        <Upload name="logo" beforeUpload={() => false} listType="picture">
+        <Upload name="logo" maxCount={1} beforeUpload={() => false} listType="picture">
           <Button icon={<UploadOutlined/>}>Click to upload</Button>
         </Upload>
       </Form.Item>

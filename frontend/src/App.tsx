@@ -50,10 +50,10 @@ export default function App() {
 
       <div className="App">
         <Row>
-          <Col flex="100px">
+          <Col>
             <Sider/>
           </Col>
-          <Col flex="auto" className={'app-content'}>
+          <Col flex="1" className={'app-content'}>
             <Switch>
               <Route path="/all-collections">
                 <AllCollections/>
