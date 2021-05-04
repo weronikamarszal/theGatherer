@@ -1,9 +1,8 @@
-import {FunctionComponent, useEffect, useState} from "react";
-import {Button, Checkbox, Divider, Form, Input, Select, Space} from "antd";
-import {AttributeFormItem} from "../AddCollectionObject/AddCollectionObject";
+import {FunctionComponent} from "react";
+import {Button, Divider, Form, Input, Select, Space} from "antd";
 import {AttributeType} from "../../types/attributeType";
 import {useHistory} from "react-router-dom";
-import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
+import {MinusCircleOutlined, PlusOutlined} from '@ant-design/icons';
 
 const layout = {
   labelCol: {span: 8},
