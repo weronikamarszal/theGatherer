@@ -192,5 +192,32 @@ class ObjectController extends BaseController
             ], 422);
         }
     }
+
+    public function updateCollection(Request $request,$id){
+        $values = $request->toArray();
+        dump($values);
+        $cnt=0;
+        if(array_key_exists('name',$values)){
+            Collection::where('id',$id)->update(['name'=>$values['name']]);
+            $cnt++;
+        }
+        if(array_key_exists('description',$values)){
+            Collection::where('id',$id)->update(['description'=>$values['description']]);
+            $cnt++;
+        }
+        if(array_key_exists('isPrivate',$values)){
+            Collection::where('id',$id)->update(['isPrivate'=>$values['isPrivate']]);
+            $cnt++;
+        }
+        if($cnt==count($values)){
+            return response()->json([
+                "message" => "Collection modified successfully"
+            ], 200);
+        } else {
+            return response()->json([
+                "message" => "Collection not modified"
+            ], 422);
+        }
+    }
 }
 

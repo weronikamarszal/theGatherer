@@ -47,9 +47,7 @@ Route::post('/create-collection',[ ObjectController::class,'createCollection']);
 Route::post('/add-object',[ ObjectController::class,'createObject']);
 Route::post('/create-attributes/{id}',[ ObjectController::class,'createAttributes']);
 
-Route::post('/delete-collection', [ ObjectController::class, 'deleteCollection']);
-Route::post('/delete-item', [ ObjectController::class, 'deleteItem']);
-
+Route::patch('/update-collection/{id}',[ObjectController::class,'updateCollection']);
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
