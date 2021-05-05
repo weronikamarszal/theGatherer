@@ -3,6 +3,7 @@ import '../../index.css';
 import {Link, useParams} from "react-router-dom";
 import {Button, Col, Row} from "antd";
 import './Collection.css'
+import {EditOutlined} from "@ant-design/icons";
 
 export const Collection: FunctionComponent = () => {
   let params = useParams<any>();
@@ -55,4 +56,6 @@ export const Collection: FunctionComponent = () => {
     </div>
   </>
 };
+
+
 
