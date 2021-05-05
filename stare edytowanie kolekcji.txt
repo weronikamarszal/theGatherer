@@ -1,0 +1,20 @@
+        //$collection->fill(array_fill_keys(array_keys($collection->toArray()), array_values($values)[0]));
+        //$collection->fill(array_fill_keys($collection, array_values($values)));
+       // dump($collection);
+//        $collection->name=$values['name'];
+//        dump($collection->name);
+//        foreach($collection as $key=>$value){
+//            dump($key,$value);
+//        }
+//        if(array_key_exists('name',$values)){
+//            Collection::where('id',$id)->update(['name'=>$values['name']]);
+//            $cnt++;
+//        }
+//        if(array_key_exists('description',$values)){
+//            Collection::where('id',$id)->update(['description'=>$values['description']]);
+//            $cnt++;
+//        }
+//        if(array_key_exists('isPrivate',$values)){
+//            Collection::where('id',$id)->update(['isPrivate'=>$values['isPrivate']]);
+//            $cnt++;
+//        }

@@ -196,20 +196,12 @@ class ObjectController extends BaseController
     public function updateCollection(Request $request,$id){
         $values = $request->toArray();
         dump($values);
-        $cnt=0;
-        if(array_key_exists('name',$values)){
-            Collection::where('id',$id)->update(['name'=>$values['name']]);
-            $cnt++;
-        }
-        if(array_key_exists('description',$values)){
-            Collection::where('id',$id)->update(['description'=>$values['description']]);
-            $cnt++;
-        }
-        if(array_key_exists('isPrivate',$values)){
-            Collection::where('id',$id)->update(['isPrivate'=>$values['isPrivate']]);
-            $cnt++;
-        }
-        if($cnt==count($values)){
+        $collection=Collection::find($id);
+        $collection->name=$values['name'];
+        $collection->description=$values['description'];
+        $collection->isPrivate=$values['isPrivate'];
+        $result=$collection->save();
+        if($result){
             return response()->json([
                 "message" => "Collection modified successfully"
             ], 200);
