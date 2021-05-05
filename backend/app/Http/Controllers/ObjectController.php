@@ -198,22 +198,6 @@ class ObjectController extends BaseController
         dump($values);
         $cnt=0;
 
-        $values->collection_id = $values['collection_id'];
-        $values->name = $values['name'];
-
-        if ($request->has('item_image')) {
-            $image = $request->file('item_image');
-            $name = Str::slug($request->input('name')) . '_' . time();
-            $folder = '/uploads/images/'  . $values->collection_id;
-            $filePath = $folder . $name . '.' . $image->getClientOriginalExtension();
-            $photo_path = Objects::where('id',$id) -> find('photo_path');
-            if(file_exists($photo_path)) {
-                File::delete($photo_path);
-            }
-            $this->uploadOne($image, $folder, 'public', $name);
-            $values->photo_path = $filePath;
-        }
-
         if(array_key_exists('name',$values)){
             Collection::where('id',$id)->update(['name'=>$values['name']]);
             $cnt++;
@@ -237,19 +221,24 @@ class ObjectController extends BaseController
         }
     }
 
-    public function deleteItem(Request $request, $id)
+    public function deleteObject(Request $request, $id)
     {
+        //deleting values of the object
         ValueDate::where('object_id',$id)->delete();
         ValueFloat::where('object_id',$id)->delete();
         ValueInt::where('object_id',$id)->delete();
         ValueString::where('object_id',$id)->delete();
 
-        $photo_path = Objects::where('id',$id) -> find('photo_path');
+        //deleting photo of the object
+        $photo_path = Objects::where('id',$id) ->find('photo_path');
         if(file_exists($photo_path)) {
             File::delete($photo_path);
         }
 
-        Objects::where('id', $id) -> delete();
+        //deleting empty object
+        Objects::where('id', $id)->delete();
+
+        //sending response
         return response()->json([
             "message" => "Item deleted successfully"
         ], 200);
@@ -257,7 +246,70 @@ class ObjectController extends BaseController
 
     public function deleteCollection(Request $request, $id)
     {
+        //deleting values of the objects
+        $objects = Objects::where('collection_id', $id)->get();
+        foreach($objects as $object){
+            /** @var $object Objects */
+            foreach($object->valueStrings as $valueString){
+                /** @var  $valueString ValueString */
+                $valueString-> delete();
+            }
+            /** @var $object Objects */
+            foreach($object->valueFloats as $valueFloat){
+                /** @var  $valueFloat ValueFloat */
+                $valueFloat->delete();
+            }
+            /** @var $object Objects */
+            foreach($object->valueInts as $valueInt){
+                /** @var  $valueInt ValueInt */
+                $valueInt->delete();
+            }
+            /** @var $object Objects */
+            foreach($object->valueDates as $valueDate){
+                /** @var  $valueDate ValueDate */
+                $valueDate->delete();
+            }
+        }
 
+        //deleting photos from collection
+        $photo_path = Objects::where('collection_id',$id) -> find('photo_path');
+        if(file_exists($photo_path)) {
+            File::delete($photo_path);
+        }
+
+        //deleting object attributes from collection
+        ObjectAttributes::where('collection_id', $id)->delete();
+
+        //deleting objects from collection
+        Objects::where('collection_id', $id)->delete();
+
+        //deleting empty collection
+        Collection::where('id', $id)->delete();
+
+        //sending response
+        return response()->json([
+            "message" => "Item deleted successfully"
+        ], 200);
+
+
+
+        //        image uploading while editing
+
+//        $values->collection_id = $values['collection_id'];
+//        $values->name = $values['name'];
+//
+//        if ($request->has('item_image')) {
+//            $image = $request->file('item_image');
+//            $name = Str::slug($request->input('name')) . '_' . time();
+//            $folder = '/uploads/images/'  . $values->collection_id;
+//            $filePath = $folder . $name . '.' . $image->getClientOriginalExtension();
+//            $photo_path = Objects::where('id',$id) -> find('photo_path');
+//            if(file_exists($photo_path)) {
+//                File::delete($photo_path);
+//            }
+//            $this->uploadOne($image, $folder, 'public', $name);
+//            $values->photo_path = $filePath;
+//        }
     }
 }
 
