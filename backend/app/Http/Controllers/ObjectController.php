@@ -294,7 +294,7 @@ class ObjectController extends BaseController
 
         //sending response
         return response()->json([
-            "message" => "Item deleted successfully"
+            "message" => "Object deleted successfully"
         ], 200);
 
 
