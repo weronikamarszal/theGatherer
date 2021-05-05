@@ -106,7 +106,7 @@ class ObjectController extends BaseController
         $values = $request->toArray();
         $values['attributes'] = json_decode($values['attributes']);
         //dump($values);
-        //dump($values['collection_id'])
+        //dump($values['collection_id'])$object = new Objects;
         $object->collection_id = $values['collection_id'];
         $object->name = $values['name'];
 
@@ -197,6 +197,23 @@ class ObjectController extends BaseController
         $values = $request->toArray();
         dump($values);
         $cnt=0;
+
+        $values->collection_id = $values['collection_id'];
+        $values->name = $values['name'];
+
+        if ($request->has('item_image')) {
+            $image = $request->file('item_image');
+            $name = Str::slug($request->input('name')) . '_' . time();
+            $folder = '/uploads/images/'  . $values->collection_id;
+            $filePath = $folder . $name . '.' . $image->getClientOriginalExtension();
+            $photo_path = Objects::where('id',$id) -> find('photo_path');
+            if(file_exists($photo_path)) {
+                File::delete($photo_path);
+            }
+            $this->uploadOne($image, $folder, 'public', $name);
+            $values->photo_path = $filePath;
+        }
+
         if(array_key_exists('name',$values)){
             Collection::where('id',$id)->update(['name'=>$values['name']]);
             $cnt++;
@@ -219,5 +236,30 @@ class ObjectController extends BaseController
             ], 422);
         }
     }
+
+    public function deleteItem(Request $request, $id)
+    {
+        ValueDate::where('object_id',$id)->delete();
+        ValueFloat::where('object_id',$id)->delete();
+        ValueInt::where('object_id',$id)->delete();
+        ValueString::where('object_id',$id)->delete();
+
+        $photo_path = Objects::where('id',$id) -> find('photo_path');
+        if(file_exists($photo_path)) {
+            File::delete($photo_path);
+        }
+
+        Objects::where('id', $id) -> delete();
+        return response()->json([
+            "message" => "Item deleted successfully"
+        ], 200);
+    }
+
+    public function deleteCollection(Request $request, $id)
+    {
+
+    }
 }
+
+
 

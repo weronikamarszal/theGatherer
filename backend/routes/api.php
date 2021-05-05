@@ -51,3 +51,6 @@ Route::patch('/update-collection/{id}',[ObjectController::class,'updateCollectio
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::post('/delete-item/{id}',[ ObjectController::class,'deleteItem']);
+Route::post('/delete-collection/{id}',[ ObjectController::class,'deleteCollection']);
