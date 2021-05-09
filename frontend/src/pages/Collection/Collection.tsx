@@ -1,17 +1,27 @@
 import React, {FunctionComponent, useEffect, useState} from 'react';
 import '../../index.css';
 import {Link, useParams} from "react-router-dom";
-import {Button, Col, Row} from "antd";
+import {Button, Col, Row, Space} from "antd";
 import './Collection.css'
 import {EditOutlined} from "@ant-design/icons";
 
 export const Collection: FunctionComponent = () => {
   let params = useParams<any>();
+  const collectionId = Number(params.id)
+
+  const [collection, setCollection] = useState<any>({});
+  useEffect(() => {
+    fetch(`/api/get-collections/${collectionId}`)
+      .then(res => res.json())
+      .then(res => {
+        setCollection(res)
+      })
+  }, [setCollection]);
 
 
   const [collectionItems, setCollectionsItems] = useState<any[]>([]);
   useEffect(() => {
-    const apiUrl = `/api/get-collection-objects/${params.id}`;
+    const apiUrl = `/api/get-collection-objects/${collectionId}`;
     fetch(apiUrl)
       .then(res => res.json())
       .then(res => {
@@ -23,10 +33,13 @@ export const Collection: FunctionComponent = () => {
     <div>
       <div className='headWrapper'>
         <div className='thisCollectionTitle'>
-          <h1>This collection</h1>
+          <h1>{collection.name}</h1>
         </div>
         <div className='addButtonWrapper'>
-          <button className='addCollectionButton'><Link to={`/${params.id}/add-object`}> Add Item </Link></button>
+          <Space>
+          <button className='addCollectionButton'><Link to={`/add-object/${params.id}`}> Add Item </Link></button>
+          <button className='addCollectionButton'><Link to={`/edit-collection/${params.id}`}> Edit collection </Link></button>
+          </Space>
         </div>
       </div>
       <hr className='horizontalLine'/>

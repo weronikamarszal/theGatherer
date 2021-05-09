@@ -67,7 +67,7 @@ class ObjectController extends BaseController
         $obj = Objects::find($id);
         $objToSend = array('id' => $obj->id, 'collection_id' => $obj->collection_id, 'name' => $obj->name,
             'photo_path' => $obj->photo_path);
-        //dump($objToSend);
+//         dump($objToSend);
         if ($returnJson) {
             return json_encode($this->getValues($obj, $objToSend));
         } else {

@@ -16,6 +16,7 @@ import {CollectionObject} from "./pages/CollectionObject/CollectionObject";
 import {AddCollectionObject} from "./pages/AddCollectionObject/AddCollectionObject";
 import {AddCollection} from "./pages/AddCollection/AddCollection";
 import {EditObject} from "./pages/EditObject/EditObject";
+import {EditCollection} from "./pages/EditCollection/EditCollection";
 
 class Sider extends React.Component {
 
@@ -68,7 +69,7 @@ export default function App() {
               <Route path="/object/:id">
                 <CollectionObject/>
               </Route>
-              <Route path="/:id/add-object">
+              <Route path="/add-object/:id">
                 <AddCollectionObject/>
               </Route>
               <Route path="/add-collection">
@@ -76,6 +77,9 @@ export default function App() {
               </Route>
               <Route path="/edit-object/:id">
                 <EditObject/>
+              </Route>
+              <Route path="/edit-collection/:id">
+                <EditCollection/>
               </Route>
             </Switch>
           </Col>
