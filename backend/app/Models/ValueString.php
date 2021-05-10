@@ -11,4 +11,7 @@ class ValueString extends Model
     public function attributeName(){
         return $this->hasOne(ObjectAttributes::class,'id','attribute_id');
     }
+    public function valueObject(){
+        return $this->hasOne(Objects::class,'id','object_id');
+    }
 }

@@ -67,7 +67,7 @@ class ObjectController extends BaseController
         $obj = Objects::find($id);
         $objToSend = array('id' => $obj->id, 'collection_id' => $obj->collection_id, 'name' => $obj->name,
             'photo_path' => $obj->photo_path);
-        dump($objToSend);
+        //dump($objToSend);
         if ($returnJson) {
             return json_encode($this->getValues($obj, $objToSend));
         } else {
@@ -113,7 +113,7 @@ class ObjectController extends BaseController
         if ($request->has('item_image')) {
             $image = $request->file('item_image');
             $name = Str::slug($request->input('name')) . '_' . time();
-            $folder = '/uploads/images/' . $object->collection_id;
+            $folder = '/uploads/images/';
             $filePath = $folder . $name . '.' . $image->getClientOriginalExtension();
             $this->uploadOne($image, $folder, 'public', $name);
             $object->photo_path = $filePath;
@@ -193,12 +193,6 @@ class ObjectController extends BaseController
         }
     }
 
-    public function notNullnotEmpty($var){
-        if($var!=null && $var!=''){
-            return true;
-        }
-        else return false;
-    }
     public function updateCollection(Request $request,$id){
         $values = $request->toArray();
         //dump($values);
@@ -214,6 +208,43 @@ class ObjectController extends BaseController
         } else {
             return response()->json([
                 "message" => "Collection not modified"
+            ], 422);
+        }
+    }
+    public function updateObject(Request $request,$id){
+        $values = $request->toArray();
+        dump($values);
+        $object=Objects::find($id);
+        $object->name=$values['name'];
+        dump($object->name);
+        $nAttributes = count($values['attributes']);
+        $cnt=0;
+        foreach ($values['attributes'] as $attribute) {
+            $cnt++;
+            //dump($attribute['id']);
+            $attributeObject = ObjectAttributes::find($attribute['id']);
+            //dump($attributeObject);
+            if ($attributeObject->type == ObjectAttributes::TYPE_INT) {
+                ValueInt::where('object_id',$id)->where('attribute_id',$attributeObject->id)
+                    ->update(['value'=>$attribute['value']]);
+            } else if ($attributeObject->type == ObjectAttributes::TYPE_FLOAT) {
+                ValueFloat::where('object_id', $id)->where('attribute_id', $attributeObject->id)
+                    ->update(['value'=>$attribute['value']]);
+            } else if ($attributeObject->type == ObjectAttributes::TYPE_DATE) {
+                ValueDate::where('object_id', $id)->where('attribute_id', $attributeObject->id)
+                    ->update(['value'=>$attribute['value']]);
+            } else if ($attributeObject->type == ObjectAttributes::TYPE_STRING) {
+                ValueString::where('object_id', $id)->where('attribute_id', $attributeObject->id)
+                    ->update(['value'=>$attribute['value']]);
+            }
+        }
+        if ($cnt == $nAttributes) {
+            return response()->json([
+                "message" => "Object updated successfully"
+            ], 201);
+        } else {
+            return response()->json([
+                "message" => "Object not updated"
             ], 422);
         }
     }
