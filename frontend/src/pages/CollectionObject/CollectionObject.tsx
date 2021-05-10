@@ -1,8 +1,9 @@
-import {FunctionComponent, useEffect, useState} from "react";
-import {Button, Col, Divider, Row, Table} from "antd";
-import {useParams, useRouteMatch,} from 'react-router-dom';
+import React, {FunctionComponent, useEffect, useState} from "react";
+import {Button, Col, Divider, Popconfirm, Row, Space, Table} from "antd";
+import {Link, useParams, useRouteMatch,} from 'react-router-dom';
 import {ColumnsType} from "antd/es/table";
 import './CollectionObject.css'
+import {EditOutlined} from "@ant-design/icons";
 
 
 export const CollectionObject: FunctionComponent = () => {
@@ -52,12 +53,17 @@ export const CollectionObject: FunctionComponent = () => {
         </h1>
       </Col>
       <Col span={12}>
-        <Button type="primary" shape="round">Delete</Button>
+        <Space>
+          <Button type="primary" shape="round"><Link to={`/edit-object/${collectionObject.id}`}>Edit</Link></Button>
+          <Popconfirm title="Are you sure delete this object?" okText="Yes" cancelText="No">
+            <Button shape="round">Delete</Button>
+          </Popconfirm>
+        </Space>
       </Col>
     </Row>
     <Divider/>
     <div className="item-image">
-    {photoPath}
+      {photoPath}
     </div>
 
     <p></p>
