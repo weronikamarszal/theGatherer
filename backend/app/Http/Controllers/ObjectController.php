@@ -172,7 +172,7 @@ class ObjectController extends BaseController
         $values = $request->toArray();
         $insertSuccess = 0;
         foreach ($values as $attribute) {
-//             dump($attribute);
+            //dump($attribute);
             $attr = new ObjectAttributes;
             $attr->collection_id = $id;
             $attr->label = $attribute['label'];
@@ -195,7 +195,7 @@ class ObjectController extends BaseController
 
     public function updateCollection(Request $request,$id){
         $values = $request->toArray();
-        dump($values);
+        //dump($values);
         $collection=Collection::find($id);
         $collection->name=$values['name'];
         $collection->description=$values['description'];
@@ -208,6 +208,43 @@ class ObjectController extends BaseController
         } else {
             return response()->json([
                 "message" => "Collection not modified"
+            ], 422);
+        }
+    }
+    public function updateObject(Request $request,$id){
+        $values = $request->toArray();
+        dump($values);
+        $object=Objects::find($id);
+        $object->name=$values['name'];
+        dump($object->name);
+        $nAttributes = count($values['attributes']);
+        $cnt=0;
+        foreach ($values['attributes'] as $attribute) {
+            $cnt++;
+            //dump($attribute['id']);
+            $attributeObject = ObjectAttributes::find($attribute['id']);
+            //dump($attributeObject);
+            if ($attributeObject->type == ObjectAttributes::TYPE_INT) {
+                ValueInt::where('object_id',$id)->where('attribute_id',$attributeObject->id)
+                    ->update(['value'=>$attribute['value']]);
+            } else if ($attributeObject->type == ObjectAttributes::TYPE_FLOAT) {
+                ValueFloat::where('object_id', $id)->where('attribute_id', $attributeObject->id)
+                    ->update(['value'=>$attribute['value']]);
+            } else if ($attributeObject->type == ObjectAttributes::TYPE_DATE) {
+                ValueDate::where('object_id', $id)->where('attribute_id', $attributeObject->id)
+                    ->update(['value'=>$attribute['value']]);
+            } else if ($attributeObject->type == ObjectAttributes::TYPE_STRING) {
+                ValueString::where('object_id', $id)->where('attribute_id', $attributeObject->id)
+                    ->update(['value'=>$attribute['value']]);
+            }
+        }
+        if ($cnt == $nAttributes) {
+            return response()->json([
+                "message" => "Object updated successfully"
+            ], 201);
+        } else {
+            return response()->json([
+                "message" => "Object not updated"
             ], 422);
         }
     }
