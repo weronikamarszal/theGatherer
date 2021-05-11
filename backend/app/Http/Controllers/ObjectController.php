@@ -196,7 +196,7 @@ class ObjectController extends BaseController
 
     public function updateCollection(Request $request,$id){
         $values = $request->toArray();
-        //dump($values);
+//         dump($values);
         $collection=Collection::find($id);
         $collection->name=$values['name'];
         $collection->description=$values['description'];

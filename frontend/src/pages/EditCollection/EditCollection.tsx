@@ -9,8 +9,13 @@ const layout = {
   wrapperCol: {span: 8},
 };
 
-const onFinish = (values: any) => {
-  console.log('Success:', values);
+function updateCollection(collection, collectionId) {
+  return fetch(`/api/update-collection/${collectionId}`, {
+    method: 'PATCH',
+    body: JSON.stringify(collection),
+    headers: {"Content-Type": "application/json"},
+  })
+    .then(res => res.json())
 }
 
 
@@ -18,6 +23,12 @@ export const EditCollection: FunctionComponent = () => {
   let params = useParams<any>();
   const history = useHistory();
   const collectionId = Number(params.id)
+
+  const onFinish = (values: any) => {
+    console.log('Success:', values);
+    updateCollection(values, collectionId)
+      .then(() => history.push(`/all-collections`))
+  };
 
   const [collection, setCollection] = useState<any>(null);
   useEffect(() => {

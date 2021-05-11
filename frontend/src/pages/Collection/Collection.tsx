@@ -16,7 +16,6 @@ function confirm(collectionId: number, history) {
     })
 }
 
-
 export const Collection: FunctionComponent = () => {
   let params = useParams<any>();
   const collectionId = Number(params.id)
