@@ -114,7 +114,7 @@ class ObjectController extends BaseController
         if ($request->has('item_image')) {
             $image = $request->file('item_image');
             $name = Str::slug($request->input('name')) . '_' . time();
-            $folder = '/uploads/images/';
+            $folder = '/uploads/images/'  . $object->collection_id . '/';
             $filePath = $folder . $name . '.' . $image->getClientOriginalExtension();
             $this->uploadOne($image, $folder, 'public', $name);
             $object->photo_path = $filePath;
@@ -219,6 +219,20 @@ class ObjectController extends BaseController
         $object->name=$values['name'];
         dump($object->name);
         $nAttributes = count($values['attributes']);
+
+        if ($request->has('item_image')) {
+            $image = $request->file('item_image');
+            $name = Str::slug($request->input('name')) . '_' . time();
+            $folder = '/uploads/images/'  . $values['collection_id'] . '/';
+            $filePath = $folder . $name . '.' . $image->getClientOriginalExtension();
+            $photo_path = Objects::where('id',$id) -> find('photo_path');
+            if(file_exists($photo_path)) {
+                File::delete($photo_path);
+            }
+            $this->uploadOne($image, $folder, 'public', $name);
+            $values->photo_path = $filePath;
+        }
+
         $cnt=0;
         foreach ($values['attributes'] as $attribute) {
             $cnt++;
@@ -320,25 +334,6 @@ class ObjectController extends BaseController
             "message" => "Object deleted successfully"
         ], 200);
 
-
-
-        //        image uploading while editing
-
-//        $values->collection_id = $values['collection_id'];
-//        $values->name = $values['name'];
-//
-//        if ($request->has('item_image')) {
-//            $image = $request->file('item_image');
-//            $name = Str::slug($request->input('name')) . '_' . time();
-//            $folder = '/uploads/images/'  . $values->collection_id;
-//            $filePath = $folder . $name . '.' . $image->getClientOriginalExtension();
-//            $photo_path = Objects::where('id',$id) -> find('photo_path');
-//            if(file_exists($photo_path)) {
-//                File::delete($photo_path);
-//            }
-//            $this->uploadOne($image, $folder, 'public', $name);
-//            $values->photo_path = $filePath;
-//        }
     }
 }
 
