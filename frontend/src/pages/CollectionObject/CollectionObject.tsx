@@ -1,19 +1,29 @@
 import React, {FunctionComponent, useEffect, useState} from "react";
-import {Button, Col, Divider, Popconfirm, Row, Space, Table} from "antd";
-import {Link, useParams, useRouteMatch,} from 'react-router-dom';
+import {Button, Col, Divider, message, Popconfirm, Row, Space, Table} from "antd";
+import {Link, useHistory, useParams, useRouteMatch,} from 'react-router-dom';
 import {ColumnsType} from "antd/es/table";
 import './CollectionObject.css'
 import {EditOutlined} from "@ant-design/icons";
 
+function confirm(objectId: number, collectionId: number, history) {
+  fetch (`/api/delete-object/${objectId}`, {
+    method: 'POST',
+  })
+    .then(res => res.json())
+    .then(() => {
+      history.push(`/collection/${collectionId}`)
+      message.success('Object deleted')
+    })
+}
 
 export const CollectionObject: FunctionComponent = () => {
-
-  let collectionId = useParams<any>();
+  let objectId = useParams<any>();
+  const history = useHistory();
 
   const [collectionObject, setObject] = useState<any>({});
   const [collectionAttributes, setAttributes] = useState<any>([]);
   useEffect(() => {
-    const apiUrl = `/api/get-object/${collectionId.id}`;
+    const apiUrl = `/api/get-object/${objectId.id}`;
     fetch(apiUrl)
       .then(res => res.json())
       .then(res => {
@@ -55,7 +65,11 @@ export const CollectionObject: FunctionComponent = () => {
       <Col span={12}>
         <Space>
           <Button type="primary" shape="round"><Link to={`/edit-object/${collectionObject.id}`}>Edit</Link></Button>
-          <Popconfirm title="Are you sure delete this object?" okText="Yes" cancelText="No">
+          <Popconfirm
+            title="Are you sure delete this object?"
+            onConfirm={() => confirm(objectId.id, collectionObject.collection_id, history)}
+            okText="Yes"
+            cancelText="No">
             <Button shape="round">Delete</Button>
           </Popconfirm>
         </Space>

@@ -67,7 +67,7 @@ class ObjectController extends BaseController
         $obj = Objects::find($id);
         $objToSend = array('id' => $obj->id, 'collection_id' => $obj->collection_id, 'name' => $obj->name,
             'photo_path' => $obj->photo_path);
-        //dump($objToSend);
+//         dump($objToSend);
         if ($returnJson) {
             return json_encode($this->getValues($obj, $objToSend));
         } else {
@@ -196,7 +196,7 @@ class ObjectController extends BaseController
 
     public function updateCollection(Request $request,$id){
         $values = $request->toArray();
-        //dump($values);
+//         dump($values);
         $collection=Collection::find($id);
         $collection->name=$values['name'];
         $collection->description=$values['description'];
@@ -214,10 +214,9 @@ class ObjectController extends BaseController
     }
     public function updateObject(Request $request,$id){
         $values = $request->toArray();
-        dump($values);
+        $values['attributes'] = json_decode($values['attributes']);
         $object=Objects::find($id);
         $object->name=$values['name'];
-        dump($object->name);
         $nAttributes = count($values['attributes']);
 
         if ($request->has('item_image')) {
@@ -230,27 +229,28 @@ class ObjectController extends BaseController
                 File::delete($photo_path);
             }
             $this->uploadOne($image, $folder, 'public', $name);
-            $values->photo_path = $filePath;
+            $object->photo_path = $filePath;
         }
+        $object->save();
 
         $cnt=0;
         foreach ($values['attributes'] as $attribute) {
             $cnt++;
             //dump($attribute['id']);
-            $attributeObject = ObjectAttributes::find($attribute['id']);
+            $attributeObject = ObjectAttributes::find($attribute->id);
             //dump($attributeObject);
             if ($attributeObject->type == ObjectAttributes::TYPE_INT) {
                 ValueInt::where('object_id',$id)->where('attribute_id',$attributeObject->id)
-                    ->update(['value'=>$attribute['value']]);
+                    ->update(['value'=>$attribute->value]);
             } else if ($attributeObject->type == ObjectAttributes::TYPE_FLOAT) {
                 ValueFloat::where('object_id', $id)->where('attribute_id', $attributeObject->id)
-                    ->update(['value'=>$attribute['value']]);
+                    ->update(['value'=>$attribute->value]);
             } else if ($attributeObject->type == ObjectAttributes::TYPE_DATE) {
                 ValueDate::where('object_id', $id)->where('attribute_id', $attributeObject->id)
-                    ->update(['value'=>$attribute['value']]);
+                    ->update(['value'=>$attribute->value]);
             } else if ($attributeObject->type == ObjectAttributes::TYPE_STRING) {
                 ValueString::where('object_id', $id)->where('attribute_id', $attributeObject->id)
-                    ->update(['value'=>$attribute['value']]);
+                    ->update(['value'=>$attribute->value]);
             }
         }
         if ($cnt == $nAttributes) {
