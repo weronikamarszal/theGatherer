@@ -25,7 +25,6 @@ export const EditCollection: FunctionComponent = () => {
   const collectionId = Number(params.id)
 
   const onFinish = (values: any) => {
-    console.log('Success:', values);
     updateCollection(values, collectionId)
       .then(() => history.push(`/all-collections`))
   };

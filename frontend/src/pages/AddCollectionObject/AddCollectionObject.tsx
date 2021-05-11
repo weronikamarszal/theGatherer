@@ -29,7 +29,6 @@ export const AddCollectionObject: FunctionComponent = () => {
       name: attribute.label,
       value: values[attribute.label],
     }))));
-    console.log(values);
 
     fetch('/api/add-object', {
       method: 'POST',
