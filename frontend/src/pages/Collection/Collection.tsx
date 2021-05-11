@@ -1,13 +1,26 @@
 import React, {FunctionComponent, useEffect, useState} from 'react';
 import '../../index.css';
-import {Link, useParams} from "react-router-dom";
-import {Button, Col, Row, Space} from "antd";
+import {Link, useHistory, useParams} from "react-router-dom";
+import {Button, Col, message, Popconfirm, Row, Space} from "antd";
 import './Collection.css'
 import {EditOutlined} from "@ant-design/icons";
+
+function confirm(collectionId: number, history) {
+  fetch (`/api/delete-collection/${collectionId}`, {
+    method: 'POST',
+  })
+    .then(res => res.json())
+    .then(() => {
+      history.push(`/all-collections`)
+      message.success('Collection deleted')
+    })
+}
+
 
 export const Collection: FunctionComponent = () => {
   let params = useParams<any>();
   const collectionId = Number(params.id)
+  const history = useHistory();
 
   const [collection, setCollection] = useState<any>({});
   useEffect(() => {
@@ -37,8 +50,16 @@ export const Collection: FunctionComponent = () => {
         </div>
         <div className='addButtonWrapper'>
           <Space>
-          <button className='addCollectionButton'><Link to={`/add-object/${params.id}`}> Add Item </Link></button>
-          <button className='addCollectionButton'><Link to={`/edit-collection/${params.id}`}> Edit collection </Link></button>
+            <Button shape="round"><Link to={`/add-object/${params.id}`}> Add Item </Link></Button>
+            <Button shape="round"><Link to={`/edit-collection/${params.id}`}> Edit collection </Link>
+            </Button>
+            <Popconfirm
+              title="Are you sure delete this object?"
+              onConfirm={() => confirm(collectionId, history)}
+              okText="Yes"
+              cancelText="No">
+              <Button shape="round">Delete</Button>
+            </Popconfirm>
           </Space>
         </div>
       </div>
