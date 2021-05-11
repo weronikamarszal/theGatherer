@@ -105,7 +105,7 @@ class ObjectController extends BaseController
         $object = new Objects;
         $values = $request->toArray();
         //dump($values['attributes']);
-        //$values['attributes'] = json_decode($values['attributes']);
+        $values['attributes'] = json_decode($values['attributes']);
         //dump($values);
         //dump($values['collection_id'])
         $object->collection_id = $values['collection_id'];
@@ -126,31 +126,31 @@ class ObjectController extends BaseController
         foreach ($values['attributes'] as $attribute) {
             $cnt++;
             //dump($attribute['id']);
-            $attributeObject = ObjectAttributes::find($attribute['id']);
+            $attributeObject = ObjectAttributes::find($attribute->id);
             //dump($attributeObject);
             if ($attributeObject->type == ObjectAttributes::TYPE_INT) {
                 $valueIntObject = new ValueInt();
                 $valueIntObject->object_id = $object->id;
                 $valueIntObject->attribute_id = $attributeObject->id;
-                $valueIntObject->value = $attribute['value'];
+                $valueIntObject->value = $attribute->value;
                 $valueIntObject->save();
             } else if ($attributeObject->type == ObjectAttributes::TYPE_FLOAT) {
                 $valueFloatObject = new ValueFloat();
                 $valueFloatObject->object_id = $object->id;
                 $valueFloatObject->attribute_id = $attributeObject->id;
-                $valueFloatObject->value = $attribute['value'];
+                $valueFloatObject->value = $attribute->value;
                 $valueFloatObject->save();
             } else if ($attributeObject->type == ObjectAttributes::TYPE_DATE) {
                 $valueDateObject = new ValueDate();
                 $valueDateObject->object_id = $object->id;
                 $valueDateObject->attribute_id = $attributeObject->id;
-                $valueDateObject->value = $attribute['value'];
+                $valueDateObject->value = $attribute->value;
                 $valueDateObject->save();
             } else if ($attributeObject->type == ObjectAttributes::TYPE_STRING) {
                 $valueStringObject = new ValueString();
                 $valueStringObject->object_id = $object->id;
                 $valueStringObject->attribute_id = $attributeObject->id;
-                $valueStringObject->value = $attribute['value'];
+                $valueStringObject->value = $attribute->value;
                 $valueStringObject->save();
             }
         }
