@@ -1,12 +1,74 @@
 import React, {FunctionComponent, useEffect, useState} from 'react';
 import '../../index.css';
 import {Link, useHistory, useParams} from "react-router-dom";
-import {Button, Col, message, Popconfirm, Row, Space} from "antd";
+import {Button, Col, DatePicker, Form, Input, InputNumber, message, Modal, Popconfirm, Row, Select, Space} from "antd";
 import './Collection.css'
-import {EditOutlined} from "@ant-design/icons";
+import {AttributeFormItem} from "../../views/ObjectForm";
+import {AttributeType} from "../../types/attributeType";
+
+const {Option} = Select;
+
+function handleChange(value) {
+  console.log(`selected ${value}`);
+}
+
+const layout = {
+  labelCol: {span: 24},
+  wrapperCol: {span: 24},
+};
+
+export const FilterFormItem: FunctionComponent<{ attribute: any }> = ({attribute}) => {
+  switch (attribute.type) {
+    case AttributeType.STRING :
+      return <Form.Item label={attribute.label}
+                        name={attribute.label}>
+        <Input/>
+      </Form.Item>
+    case AttributeType.FLOAT :
+      return (
+        <Form.Item label={attribute.label}
+                   name={attribute.label}>
+          <Space>
+            From:
+            <InputNumber/>
+            To:
+            <InputNumber/>
+          </Space>
+        </Form.Item>)
+    case AttributeType.INT :
+      return <Form.Item label={attribute.label}
+                        name={attribute.label}>
+        <Space>
+        From:
+        <InputNumber/>
+        To:
+        <InputNumber/>
+        </Space>
+      </Form.Item>
+    case AttributeType.DATE :
+      return <Form.Item label={attribute.label}
+                        name={attribute.label}>
+        <Space>
+        From:
+        <DatePicker/>
+        To:
+        <DatePicker/>
+        </Space>
+      </Form.Item>
+    default:
+      return <>NULL</>
+  }
+}
+
+
+function getAttributes(collectionId: number) {
+  const apiUrl = `/api/get-collection-attributes/${collectionId}`;
+  return fetch(apiUrl)
+    .then(res => res.json())
+}
 
 function confirm(collectionId: number, history) {
-  fetch (`/api/delete-collection/${collectionId}`, {
+  fetch(`/api/delete-collection/${collectionId}`, {
     method: 'POST',
   })
     .then(res => res.json())
@@ -17,6 +79,20 @@ function confirm(collectionId: number, history) {
 }
 
 export const Collection: FunctionComponent = () => {
+  const [isModalVisible, setIsModalVisible] = useState(false);
+
+  const showModal = () => {
+    setIsModalVisible(true);
+  };
+
+  const handleOk = () => {
+    setIsModalVisible(false);
+  };
+
+  const handleCancel = () => {
+    setIsModalVisible(false);
+  };
+
   let params = useParams<any>();
   const collectionId = Number(params.id)
   const history = useHistory();
@@ -41,6 +117,14 @@ export const Collection: FunctionComponent = () => {
       })
   }, [setCollectionsItems]);
 
+  const [collectionAttributes, setCollectionAttributes] = useState<any[]>([]);
+  useEffect(() => {
+    getAttributes(collectionId)
+      .then(res => {
+        setCollectionAttributes(res)
+      })
+  }, [setCollectionAttributes]);
+
   return <>
     <div>
       <div className='headWrapper'>
@@ -63,15 +147,42 @@ export const Collection: FunctionComponent = () => {
         </div>
       </div>
       <hr className='horizontalLine'/>
-      <div className="dropdown">
-        <button className="dropbtn">Sort by...</button>
-        <div className="dropdown-content">
-          <button className='sortButton'>Dimensions</button>
-          <button className='sortButton'>Material</button>
-          <button className='sortButton'>Date</button>
-          <button className='sortButton'>Standard</button>
-        </div>
-      </div>
+      <Button type="primary" onClick={showModal}>
+        Filter by
+      </Button>
+      <Modal title="Filter by" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
+        <Row>
+          <Form
+            name="basic"
+            {...layout}
+          >
+            <Col>
+              {collectionAttributes.map((attribute) =>
+                <FilterFormItem attribute={attribute}/>
+              )}
+            </Col>
+
+            <Col>
+              <Form.Item>
+                <Space>
+                  Sort by:
+                  <Select style={{width: 120}} onChange={handleChange}>
+                    {collectionAttributes.map((attribute) =>
+                      <Option value={attribute.label}>{attribute.label}</Option>
+                    )}
+                  </Select>
+                  Direction
+                  <Select style={{width: 120}} onChange={handleChange}>
+                    <Option value="asc">Asc</Option>
+                    <Option value="desc">Desc</Option>
+                  </Select>
+                </Space>
+              </Form.Item>
+            </Col>
+          </Form>
+        </Row>
+      </Modal>
+
       <Row>
         {collectionItems.map((item) =>
           <Col span={8} className='collection-item-wrapper'>
