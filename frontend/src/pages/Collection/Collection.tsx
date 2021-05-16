@@ -21,40 +21,47 @@ export const FilterFormItem: FunctionComponent<{ attribute: any }> = ({attribute
   switch (attribute.type) {
     case AttributeType.STRING :
       return <Form.Item label={attribute.label}
-                        name={attribute.label}>
+                        name={['filters', attribute.label]}>
         <Input/>
       </Form.Item>
     case AttributeType.FLOAT :
       return (
-        <Form.Item label={attribute.label}
-                   name={attribute.label}>
-          <Space>
-            From:
+        <Space>
+          <Form.Item label={attribute.label}
+                     name={['filters', attribute.label, 'from']}>
             <InputNumber/>
-            To:
+          </Form.Item>
+          <Form.Item label={attribute.label}
+                     name={['filters', attribute.label, 'to']}>
             <InputNumber/>
-          </Space>
-        </Form.Item>)
+          </Form.Item>
+        </Space>)
     case AttributeType.INT :
-      return <Form.Item label={attribute.label}
-                        name={attribute.label}>
+      return (
         <Space>
-        From:
-        <InputNumber/>
-        To:
-        <InputNumber/>
+          <Form.Item label={attribute.label}
+                     name={['filters', attribute.label, 'from']}>
+            <InputNumber/>
+          </Form.Item>
+          <Form.Item label={attribute.label}
+                     name={['filters', attribute.label, 'to']}>
+            <InputNumber/>
+          </Form.Item>
         </Space>
-      </Form.Item>
+      )
     case AttributeType.DATE :
-      return <Form.Item label={attribute.label}
-                        name={attribute.label}>
+      return (
         <Space>
-        From:
-        <DatePicker/>
-        To:
-        <DatePicker/>
+          <Form.Item label={attribute.label}
+                     name={['filters', attribute.label, 'from']}>
+            <DatePicker/>
+          </Form.Item>
+          <Form.Item label={attribute.label}
+                     name={['filters', attribute.label, 'to']}>
+            <DatePicker/>
+          </Form.Item>
         </Space>
-      </Form.Item>
+      )
     default:
       return <>NULL</>
   }
@@ -80,13 +87,18 @@ function confirm(collectionId: number, history) {
 
 export const Collection: FunctionComponent = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [form] = Form.useForm();
 
   const showModal = () => {
     setIsModalVisible(true);
   };
 
   const handleOk = () => {
+    form.submit();
     setIsModalVisible(false);
+  };
+  const onFinish = (values: any) => {
+    console.log('Success:', values);
   };
 
   const handleCancel = () => {
@@ -154,7 +166,9 @@ export const Collection: FunctionComponent = () => {
         <Row>
           <Form
             name="basic"
+            form={form}
             {...layout}
+            onFinish={onFinish}
           >
             <Col>
               {collectionAttributes.map((attribute) =>
@@ -163,21 +177,28 @@ export const Collection: FunctionComponent = () => {
             </Col>
 
             <Col>
-              <Form.Item>
-                <Space>
-                  Sort by:
+              <Space>
+                <Form.Item
+                  name={['sort_by', 'field']}
+                  label='Sort by: '
+                >
                   <Select style={{width: 120}} onChange={handleChange}>
                     {collectionAttributes.map((attribute) =>
                       <Option value={attribute.label}>{attribute.label}</Option>
                     )}
                   </Select>
-                  Direction
+                </Form.Item>
+
+                <Form.Item
+                  name={['sort_by', 'dir']}
+                  label='Direction: '
+                >
                   <Select style={{width: 120}} onChange={handleChange}>
                     <Option value="asc">Asc</Option>
                     <Option value="desc">Desc</Option>
                   </Select>
-                </Space>
-              </Form.Item>
+                </Form.Item>
+              </Space>
             </Col>
           </Form>
         </Row>
@@ -200,6 +221,4 @@ export const Collection: FunctionComponent = () => {
     </div>
   </>
 };
-
-
 
