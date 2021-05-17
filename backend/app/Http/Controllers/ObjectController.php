@@ -52,14 +52,20 @@ class ObjectController extends BaseController
     }
 
 
-    public function getObjects($collection_id)
+    public function getObjects($collection_id,bool $returnJson)
     {
         $objs = Collection::find($collection_id)->objects;
         $objectsToSend = [];
         foreach ($objs as $object) {
             array_push($objectsToSend, $this->getObject($object->id, false));
         }
-        return json_encode($objectsToSend);
+        if ($returnJson){
+            return json_encode($objectsToSend);
+        }
+        else {
+            return $objectsToSend;
+        }
+
     }
 
     public function getObject($id, bool $returnJson)
@@ -334,6 +340,35 @@ class ObjectController extends BaseController
             "message" => "Object deleted successfully"
         ], 200);
 
+    }
+
+    public function getSorted(Request $request,$id)
+    {
+        $values = $request->toArray();
+        //dump($values);
+        $coll = Collection::find($id)->get();
+        $obj=$this->getObjects($id,false);
+        $filters=$values['filters'];
+        dump($obj[0]['Dlugosc ostrza']);
+        dump($filters[0]);
+        foreach($obj as $object ){
+            foreach($filters as $filterKey){
+//                if(array_key_exists('from',$filterKey)){
+//                    $from=$filterKey['from'];
+//                    if($object[$filterKey]<$from){
+//                        array_splice($obj,1,1);
+//                    }
+//                }
+//                if(array_key_exists('to',$filterKey)){
+//                    $to=$filterKey['to'];
+//                    if($object[$filterKey]>$to){
+//                        array_splice($obj,1,1);
+//                    }
+//                }
+            }
+
+        }
+        //dump($filters[0]);
     }
 }
 
