@@ -347,28 +347,68 @@ class ObjectController extends BaseController
         $values = $request->toArray();
         //dump($values);
         $coll = Collection::find($id)->get();
-        $obj=$this->getObjects($id,false);
-        $filters=$values['filters'];
-        dump($obj[0]['Dlugosc ostrza']);
-        dump($filters[0]);
-        foreach($obj as $object ){
-            foreach($filters as $filterKey){
-//                if(array_key_exists('from',$filterKey)){
-//                    $from=$filterKey['from'];
-//                    if($object[$filterKey]<$from){
-//                        array_splice($obj,1,1);
-//                    }
-//                }
-//                if(array_key_exists('to',$filterKey)){
-//                    $to=$filterKey['to'];
-//                    if($object[$filterKey]>$to){
-//                        array_splice($obj,1,1);
-//                    }
-//                }
-            }
-
-        }
+        $obj = $this->getObjects($id, false);
+        $filters = $values['filters'];
+        dump($obj);
         //dump($filters[0]);
+        $cnt=0;
+        $indToDelete=[];
+        foreach ($filters as $filterKey => $filterValue) {
+            $to = null;
+            $value=null;
+            $from = null;
+            if(is_array($filterValue)){
+                if (array_key_exists('from', $filterValue)) {
+                    $from = $filterValue['from'];
+                }
+                if (array_key_exists('to', $filterValue)) {
+                    $to = $filterValue['to'];
+                }
+            }
+            else{
+                $value=$filterValue;
+            }
+            //dump($value);
+
+
+            foreach ($obj as $object) {
+                //dump($filterKey, $filterValue);
+                if ($from != null && $to != null) {
+                    if ( $object[$filterKey] > $to || $object[$filterKey] < $from) {
+                        unset($obj[$cnt]);
+                    }
+                }
+                else if ($from != null && $to == null) {
+                    if ($object[$filterKey] < $from) {
+                        unset($obj[$cnt]);
+                    }
+                }
+                if($value!=null){
+                    if(ctype_alpha($value)){
+                        if(strtoupper($object[$filterKey])!=strtoupper($value)){
+                            unset($obj[$cnt]);
+                        }
+                    }
+                    else{
+                        if($object[$filterKey]!=$value){
+                            unset($obj[$cnt]);
+                        }
+                    }
+
+                }
+                $cnt+=1;
+            }
+            $cnt=0;
+        }
+        $sortBy=array_column($obj,$values['sort_by']['field']);
+        //dump($sortBy);
+        if($values['sort_by']['dir']=='asc'){
+            array_multisort($sortBy,SORT_ASC,$obj);
+        }
+        else{
+            array_multisort($sortBy,SORT_DESC,$obj);
+        }
+        dump($obj);
     }
 }
 
