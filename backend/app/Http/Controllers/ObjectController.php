@@ -52,14 +52,20 @@ class ObjectController extends BaseController
     }
 
 
-    public function getObjects($collection_id)
+    public function getObjects($collection_id,bool $returnJson)
     {
         $objs = Collection::find($collection_id)->objects;
         $objectsToSend = [];
         foreach ($objs as $object) {
             array_push($objectsToSend, $this->getObject($object->id, false));
         }
-        return json_encode($objectsToSend);
+        if ($returnJson){
+            return json_encode($objectsToSend);
+        }
+        else {
+            return $objectsToSend;
+        }
+
     }
 
     public function getObject($id, bool $returnJson)
@@ -333,6 +339,77 @@ class ObjectController extends BaseController
         return response()->json([
             "message" => "Object deleted successfully"
         ], 200);
+
+    }
+
+    public function getSorted(Request $request,$id)
+    {
+        $values = $request->toArray();
+        //dump($values);
+        $coll = Collection::find($id)->get();
+        $obj = $this->getObjects($id, false);
+        $filters = $values['filters'];
+        //dump($obj);
+        //dump($filters[0]);
+        $cnt=0;
+        $indToDelete=[];
+        foreach ($filters as $filterKey => $filterValue) {
+            $to = null;
+            $value=null;
+            $from = null;
+            if(is_array($filterValue)){
+                if (array_key_exists('from', $filterValue)) {
+                    $from = $filterValue['from'];
+                }
+                if (array_key_exists('to', $filterValue)) {
+                    $to = $filterValue['to'];
+                }
+            }
+            else{
+                $value=$filterValue;
+            }
+            //dump($value);
+
+
+            foreach ($obj as $object) {
+                //dump($filterKey, $filterValue);
+                if ($from != null && $to != null) {
+                    if ( $object[$filterKey] > $to || $object[$filterKey] < $from) {
+                        unset($obj[$cnt]);
+                    }
+                }
+                else if ($from != null && $to == null) {
+                    if ($object[$filterKey] < $from) {
+                        unset($obj[$cnt]);
+                    }
+                }
+                if($value!=null){
+                    if(ctype_alpha($value)){
+                        if(strtoupper($object[$filterKey])!=strtoupper($value)){
+                            unset($obj[$cnt]);
+                        }
+                    }
+                    else{
+                        if($object[$filterKey]!=$value){
+                            unset($obj[$cnt]);
+                        }
+                    }
+
+                }
+                $cnt+=1;
+            }
+            $cnt=0;
+        }
+        $sortBy=array_column($obj,$values['sort_by']['field']);
+        //dump($sortBy);
+        if($values['sort_by']['dir']=='asc'){
+            array_multisort($sortBy,SORT_ASC,$obj);
+        }
+        else{
+            array_multisort($sortBy,SORT_DESC,$obj);
+        }
+        //dump($obj);
+        return $obj;
 
     }
 }
