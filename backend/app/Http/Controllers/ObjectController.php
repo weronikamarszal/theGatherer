@@ -408,7 +408,9 @@ class ObjectController extends BaseController
         else{
             array_multisort($sortBy,SORT_DESC,$obj);
         }
-        dump($obj);
+        //dump($obj);
+        return $obj;
+
     }
 }
 
