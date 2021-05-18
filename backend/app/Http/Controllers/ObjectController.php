@@ -349,7 +349,7 @@ class ObjectController extends BaseController
         $coll = Collection::find($id)->get();
         $obj = $this->getObjects($id, false);
         $filters = $values['filters'];
-        dump($obj);
+        //dump($obj);
         //dump($filters[0]);
         $cnt=0;
         $indToDelete=[];
