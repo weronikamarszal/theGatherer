@@ -98,7 +98,18 @@ export const Collection: FunctionComponent = () => {
     setIsModalVisible(false);
   };
   const onFinish = (values: any) => {
-    console.log('Success:', values);
+    if (Object.keys(values.sort_by).length === 0) {
+      values.sort_by = undefined;
+    }
+    fetch(`/api/get-sorted/${collectionId}`, {
+      method: 'POST',
+      body: JSON.stringify(values),
+      headers: {"Content-Type": "application/json"}
+    })
+      .then(res => res.json())
+      .then((res) => {
+        setCollectionsItems(res);
+      })
   };
 
   const handleCancel = () => {
