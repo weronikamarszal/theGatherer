@@ -348,69 +348,68 @@ class ObjectController extends BaseController
         //dump($values);
         $coll = Collection::find($id)->get();
         $obj = $this->getObjects($id, false);
-        $filters = $values['filters'];
         //dump($obj);
         //dump($filters[0]);
         $cnt=0;
-        $indToDelete=[];
-        foreach ($filters as $filterKey => $filterValue) {
-            $to = null;
-            $value=null;
-            $from = null;
-            if(is_array($filterValue)){
-                if (array_key_exists('from', $filterValue)) {
-                    $from = $filterValue['from'];
+        if(array_key_exists('filters',$values)){
+            $filters = $values['filters'];
+            foreach ($filters as $filterKey => $filterValue) {
+                $to = null;
+                $value=null;
+                $from = null;
+                if(is_array($filterValue)){
+                    if (array_key_exists('from', $filterValue)) {
+                        $from = $filterValue['from'];
+                    }
+                    if (array_key_exists('to', $filterValue)) {
+                        $to = $filterValue['to'];
+                    }
                 }
-                if (array_key_exists('to', $filterValue)) {
-                    $to = $filterValue['to'];
+                else{
+                    $value=$filterValue;
                 }
+                //dump($value);
+                foreach ($obj as $object) {
+                    //dump($filterKey, $filterValue);
+                    if ($from != null && $to != null) {
+                        if ( $object[$filterKey] > $to || $object[$filterKey] < $from) {
+                            unset($obj[$cnt]);
+                        }
+                    }
+                    else if ($from != null && $to == null) {
+                        if ($object[$filterKey] < $from) {
+                            unset($obj[$cnt]);
+                        }
+                    }
+                    if($value!=null){
+                        if(ctype_alpha($value)){
+                            if(strtoupper($object[$filterKey])!=strtoupper($value)){
+                                unset($obj[$cnt]);
+                            }
+                        }
+                        else{
+                            if($object[$filterKey]!=$value){
+                                unset($obj[$cnt]);
+                            }
+                        }
+                    }
+                    $cnt+=1;
+                }
+                $cnt=0;
+            }
+        }
+        if(key_exists('sort_by',$values)){
+            $sortBy=array_column($obj,$values['sort_by']['field']);
+            //dump($sortBy);
+            if($values['sort_by']['dir']=='asc'){
+                array_multisort($sortBy,SORT_ASC,$obj);
             }
             else{
-                $value=$filterValue;
+                array_multisort($sortBy,SORT_DESC,$obj);
             }
-            //dump($value);
-
-
-            foreach ($obj as $object) {
-                //dump($filterKey, $filterValue);
-                if ($from != null && $to != null) {
-                    if ( $object[$filterKey] > $to || $object[$filterKey] < $from) {
-                        unset($obj[$cnt]);
-                    }
-                }
-                else if ($from != null && $to == null) {
-                    if ($object[$filterKey] < $from) {
-                        unset($obj[$cnt]);
-                    }
-                }
-                if($value!=null){
-                    if(ctype_alpha($value)){
-                        if(strtoupper($object[$filterKey])!=strtoupper($value)){
-                            unset($obj[$cnt]);
-                        }
-                    }
-                    else{
-                        if($object[$filterKey]!=$value){
-                            unset($obj[$cnt]);
-                        }
-                    }
-
-                }
-                $cnt+=1;
-            }
-            $cnt=0;
-        }
-        $sortBy=array_column($obj,$values['sort_by']['field']);
-        //dump($sortBy);
-        if($values['sort_by']['dir']=='asc'){
-            array_multisort($sortBy,SORT_ASC,$obj);
-        }
-        else{
-            array_multisort($sortBy,SORT_DESC,$obj);
         }
         //dump($obj);
         return $obj;
-
     }
 }
 
