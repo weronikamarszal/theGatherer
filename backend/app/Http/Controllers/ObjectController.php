@@ -409,7 +409,7 @@ class ObjectController extends BaseController
             }
         }
         //dump($obj);
-        return $obj;
+        return array_values($obj);
     }
 }
 

@@ -27,24 +27,26 @@ export const FilterFormItem: FunctionComponent<{ attribute: any }> = ({attribute
     case AttributeType.FLOAT :
       return (
         <Space>
-          <Form.Item label={attribute.label}
-                     name={['filters', attribute.label, 'from']}>
+          {attribute.label}
+          <Form.Item
+            name={['filters', attribute.label, 'from']}>
             <InputNumber/>
           </Form.Item>
-          <Form.Item label={attribute.label}
-                     name={['filters', attribute.label, 'to']}>
+          <Form.Item
+            name={['filters', attribute.label, 'to']}>
             <InputNumber/>
           </Form.Item>
         </Space>)
     case AttributeType.INT :
       return (
         <Space>
-          <Form.Item label={attribute.label}
-                     name={['filters', attribute.label, 'from']}>
+          {attribute.label}
+          <Form.Item
+            name={['filters', attribute.label, 'from']}>
             <InputNumber/>
           </Form.Item>
-          <Form.Item label={attribute.label}
-                     name={['filters', attribute.label, 'to']}>
+          <Form.Item
+            name={['filters', attribute.label, 'to']}>
             <InputNumber/>
           </Form.Item>
         </Space>
@@ -52,12 +54,13 @@ export const FilterFormItem: FunctionComponent<{ attribute: any }> = ({attribute
     case AttributeType.DATE :
       return (
         <Space>
-          <Form.Item label={attribute.label}
-                     name={['filters', attribute.label, 'from']}>
+          {attribute.label}
+          <Form.Item
+            name={['filters', attribute.label, 'from']}>
             <DatePicker/>
           </Form.Item>
-          <Form.Item label={attribute.label}
-                     name={['filters', attribute.label, 'to']}>
+          <Form.Item
+            name={['filters', attribute.label, 'to']}>
             <DatePicker/>
           </Form.Item>
         </Space>
@@ -98,7 +101,7 @@ export const Collection: FunctionComponent = () => {
     setIsModalVisible(false);
   };
   const onFinish = (values: any) => {
-    if (Object.keys(values.sort_by).length === 0) {
+    if (!values.sort_by.field) {
       values.sort_by = undefined;
     }
     fetch(`/api/get-sorted/${collectionId}`, {
