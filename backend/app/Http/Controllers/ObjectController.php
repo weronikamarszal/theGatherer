@@ -381,6 +381,12 @@ class ObjectController extends BaseController
                             unset($obj[$cnt]);
                         }
                     }
+                    else if ($from == null && $to != null) {
+                        if ($object[$filterKey] >$to) {
+                            unset($obj[$cnt]);
+                        }
+                    }
+
                     if($value!=null){
                         if(ctype_alpha($value)){
                             if(strtoupper($object[$filterKey])!=strtoupper($value)){
@@ -409,7 +415,8 @@ class ObjectController extends BaseController
             }
         }
         //dump($obj);
-        return $obj;
+        return array_values($obj);
     }
+
 }
 
