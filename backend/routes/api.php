@@ -7,6 +7,9 @@ use Illuminate\Support\Facades\Route;
 use App\Models\Collection;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\ObjectController;
+use App\Http\Controllers\ObjectPdfController;
+
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -37,6 +40,8 @@ Route::get('/get-object/{id}',function($id){
     $obj=new ObjectController();
     return $obj->getObject($id,true);
 });
+
+Route::get('/get-collection-csv/{id}',[ObjectController::class,'getCollectionCsv']);
 Route::post('/get-sorted/{id}',[ObjectController::class,'getSorted']);
 Route::post('/create-collection',[ ObjectController::class,'createCollection']);
 Route::post('/add-object',[ ObjectController::class,'createObject']);
@@ -51,3 +56,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::post('/delete-object/{id}',[ ObjectController::class,'deleteObject']);
 Route::post('/delete-collection/{id}',[ ObjectController::class,'deleteCollection']);
+
+Route::get('/get-pdf/{id}', [ObjectPdfController::class, 'pdfview']);
+//Route::get('/get-pdf/{id}',[ObjectController::class, 'pdfview']);
+
