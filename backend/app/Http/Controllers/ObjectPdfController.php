@@ -19,24 +19,25 @@ class ObjectPdfController
         $object = Objects::find($id);
         $collectionId = $object->collection_id;
         $attributes = ObjectAttributes::where('collection_id', $collectionId)->get();
+        $attributesIds = ObjectAttributes::where('collection_id', $collectionId)->pluck('id');
         $attributesValues = [];
 
-        foreach ($attributes as $key => $attribute) {
-            $atrId = $attribute->id;
-            if ($attribute->type = 1) {
-                $attributeValue = ValueInt::where('attribute_id', $atrId)->where('object_id',$id)->value('value');
+        foreach ($attributesIds as $key => $attributeId) {
+            $type = ObjectAttributes::where('id', $attributeId)->value('type');
+            if ($type == 1) {
+                $attributeValue = ValueInt::where('attribute_id', $attributeId)->where('object_id',$id)->value('value');
                 array_push($attributesValues, $attributeValue);
             }
-            elseif ($attribute->type = 2) {
-                $attributeValue = ValueFloat::where('attribute_id', $atrId)->where('object_id',$id)->value('value');
+            if ($type == 2) {
+                $attributeValue = ValueFloat::where('attribute_id', $attributeId)->where('object_id',$id)->value('value');
                 array_push($attributesValues, $attributeValue);
             }
-            elseif ($attribute->type = 3) {
-                $attributeValue = ValueString::where('attribute_id', $atrId)->where('object_id',$id)->value('value');
+            if ($type == 3) {
+                $attributeValue = ValueString::where('attribute_id', $attributeId)->where('object_id',$id)->value('value');
                 array_push($attributesValues, $attributeValue);
             }
-            elseif ($attribute->type = 4) {
-                $attributeValue = ValueDate::where('attribute_id', $atrId)->where('object_id',$id)->value('value');
+            if ($type == 4) {
+                $attributeValue = ValueDate::where('attribute_id', $attributeId)->where('object_id',$id)->value('value');
                 array_push($attributesValues, $attributeValue);
             }
         }
