@@ -421,5 +421,43 @@ class ObjectController extends BaseController
         //dump($obj);
         return array_values($obj);
     }
+
+    public function getCollectionCsv($id){
+        $collection=Collection::find($id);
+        //dump($collection["name"]);
+        $objects=$this->getObjects($id,false);
+        //dump($objects);
+        $columns=[];
+        foreach($objects[0] as $key=>$value){
+            array_push($columns,$key);
+        }
+        foreach($objects as &$object){
+            foreach($object as $key=>$value){
+                if(is_float($value)){
+                    $object[$key]=str_replace(".",",",strval($value));
+                }
+            }
+        }
+        array_splice($columns,0,2);
+        array_splice($columns,1,1);
+        //dump($columns);
+        //dump($objects);
+        $now=Carbon::now()->toDateTimeString();
+        $filename=str_replace(" ","-",$collection['name'])."-".str_replace(array(" ",":"),array("_","-"),$now).'.csv';
+        //dump($filename);
+        //dump(getcwd());
+        $file=fopen($_SERVER['DOCUMENT_ROOT']."\\reports\\".strval($filename),'w');
+        fputcsv($file,$columns,';',' ');
+        foreach($objects as $object){
+            unset($object['id'],$object['collection_id'],$object['photo_path']);
+            fputcsv($file,$object,';',' ');
+        }
+        header('Content-Type : text/csv');
+        header('Content-Type: application/force-download');
+        return response()->download($_SERVER['DOCUMENT_ROOT']."\\reports\\".$filename);
+        //return Storage::download($_SERVER['DOCUMENT_ROOT']."\\reports\\".$filename,'abc',$headers);
+        //$path=storage_path('public/reports/');
+        //return Storage::download($path,$filename,$headers);
+    }
 }
 
