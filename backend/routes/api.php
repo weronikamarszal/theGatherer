@@ -37,6 +37,8 @@ Route::get('/get-object/{id}',function($id){
     $obj=new ObjectController();
     return $obj->getObject($id,true);
 });
+
+Route::get('/get-collection-csv/{id}',[ObjectController::class,'getCollectionCsv']);
 Route::post('/get-sorted/{id}',[ObjectController::class,'getSorted']);
 Route::post('/create-collection',[ ObjectController::class,'createCollection']);
 Route::post('/add-object',[ ObjectController::class,'createObject']);
