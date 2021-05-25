@@ -7,6 +7,9 @@ use Illuminate\Support\Facades\Route;
 use App\Models\Collection;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\ObjectController;
+use App\Http\Controllers\ObjectPdfController;
+
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -51,3 +54,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::post('/delete-object/{id}',[ ObjectController::class,'deleteObject']);
 Route::post('/delete-collection/{id}',[ ObjectController::class,'deleteCollection']);
+
+Route::get('/get-pdf/{id}', [ObjectPdfController::class, 'pdfview']);
+//Route::get('/get-pdf/{id}',[ObjectController::class, 'pdfview']);
+
