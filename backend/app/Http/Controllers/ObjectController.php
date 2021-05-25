@@ -20,6 +20,10 @@ use App\Traits\UploadTrait;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Psy\Util\Json;
+use Barryvdh\DomPDF\PDF;
+use App\Http\Requests;
+
+
 
 class ObjectController extends BaseController
 {
