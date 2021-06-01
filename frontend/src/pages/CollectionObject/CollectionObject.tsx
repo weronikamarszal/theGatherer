@@ -6,7 +6,7 @@ import './CollectionObject.css'
 import {EditOutlined} from "@ant-design/icons";
 
 function confirm(objectId: number, collectionId: number, history) {
-  fetch (`/api/delete-object/${objectId}`, {
+  fetch(`/api/delete-object/${objectId}`, {
     method: 'POST',
   })
     .then(res => res.json())
@@ -65,6 +65,40 @@ export const CollectionObject: FunctionComponent = () => {
       <Col span={12}>
         <Space>
           <Button type="primary" shape="round"><Link to={`/edit-object/${collectionObject.id}`}>Edit</Link></Button>
+          <Button type="primary" shape="round" onClick={() => {
+
+            fetch(`http://127.0.0.1:8000/api/get-pdf/${collectionObject.id}`, {
+              method: 'GET',
+            })
+              .then(response => response.blob())
+              .then(blob => {
+                var url = window.URL.createObjectURL(blob);
+                var a = document.createElement('a');
+                a.href = url;
+                a.target="_blank"
+                document.body.appendChild(a); // we need to append the element to the dom -> otherwise it will not work in firefox
+                a.click();
+                a.remove();  //afterwards we remove the element again
+              });
+          }}>Show raport</Button>
+
+          <Button type="primary" shape="round" onClick={() => {
+            fetch(`http://127.0.0.1:8000/api/get-pdf/${collectionObject.id}`, {
+              method: 'GET',
+            })
+              .then(response => response.blob())
+              .then(blob => {
+                var url = window.URL.createObjectURL(blob);
+                var a = document.createElement('a');
+                a.href = url;
+                a.download = "filename.txt";
+                document.body.appendChild(a); // we need to append the element to the dom -> otherwise it will not work in firefox
+                a.click();
+                a.remove();  //afterwards we remove the element again
+              });
+          }}>Download raport</Button>
+
+
           <Popconfirm
             title="Are you sure delete this object?"
             onConfirm={() => confirm(objectId.id, collectionObject.collection_id, history)}
