@@ -9,7 +9,7 @@ use App\Models\ValueDate;
 use App\Models\ValueFloat;
 use App\Models\ValueInt;
 use App\Models\ValueString;
-use Barryvdh\DomPDF\PDF;
+use Barryvdh\DomPDF\Facade as PDF;
 use Illuminate\Http\Request;
 
 class ObjectPdfController
@@ -45,11 +45,12 @@ class ObjectPdfController
         view()->share('object',$object);
         view()->share('attributes',$attributes);
         view()->share('attributesValues', $attributesValues);
+        $pdf = PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->loadView('pdfview');
 
         if($request->has('download')){
-            $pdf = PDF::loadView('pdfview');
             return $pdf->download('pdfview.pdf');
         }
-        return view('pdfview');
+
+        return $pdf->stream();
     }
 }

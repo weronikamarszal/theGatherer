@@ -91,7 +91,7 @@ export const CollectionObject: FunctionComponent = () => {
                 var url = window.URL.createObjectURL(blob);
                 var a = document.createElement('a');
                 a.href = url;
-                a.download = "filename.txt";
+                a.download = "filename.pdf";
                 document.body.appendChild(a); // we need to append the element to the dom -> otherwise it will not work in firefox
                 a.click();
                 a.remove();  //afterwards we remove the element again

@@ -58,3 +58,5 @@ Route::post('/delete-object/{id}',[ ObjectController::class,'deleteObject']);
 Route::post('/delete-collection/{id}',[ ObjectController::class,'deleteCollection']);
 
 Route::get('/get-pdf/{id}', [ObjectPdfController::class, 'pdfview']);
+
+//Route::get('/get-pdf/{id}',array('as'=>'pdfview','uses'=>'ObjectPdfController@pdfview'));
