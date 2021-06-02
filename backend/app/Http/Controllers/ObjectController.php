@@ -478,10 +478,8 @@ class ObjectController extends BaseController
         //header("Content-Disposition: attachment; filename=".$_SERVER['DOCUMENT_ROOT']."\\reports\\".$filename.'"');
         //readfile ($_SERVER['DOCUMENT_ROOT']."\\reports\\".strval($filename).'.xlsx');
         //exit();
+        unlink($_SERVER['DOCUMENT_ROOT']."\\reports\\".str_replace('xlsx','csv',$filename));
         return response()->download($_SERVER['DOCUMENT_ROOT']."\\reports\\".$filename);
-        //return Storage::download($_SERVER['DOCUMENT_ROOT']."\\reports\\".$filename,'abc',$headers);
-        //$path=storage_path('public/reports/');
-        //return Storage::download($path,$filename,$headers);
     }
 }
 
