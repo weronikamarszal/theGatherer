@@ -22,7 +22,8 @@ use Illuminate\Support\Str;
 use Psy\Util\Json;
 use Barryvdh\DomPDF\PDF;
 use App\Http\Requests;
-
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 
 class ObjectController extends BaseController
@@ -435,13 +436,13 @@ class ObjectController extends BaseController
         foreach($objects[0] as $key=>$value){
             array_push($columns,$key);
         }
-        foreach($objects as &$object){
-            foreach($object as $key=>$value){
-                if(is_float($value)){
-                    $object[$key]=str_replace(".",",",strval($value));
-                }
-            }
-        }
+//        foreach($objects as &$object){
+//            foreach($object as $key=>$value){
+//                if(is_float($value)){
+//                    $object[$key]=str_replace(".",",",strval($value));
+//                }
+//            }
+//        }
         array_splice($columns,0,2);
         array_splice($columns,1,1);
         //dump($columns);
@@ -456,12 +457,29 @@ class ObjectController extends BaseController
             unset($object['id'],$object['collection_id'],$object['photo_path']);
             fputcsv($file,$object,';',' ');
         }
-        header('Content-Type : text/csv');
-        header('Content-Type: application/force-download');
+        $spreadsheet = new Spreadsheet();
+        $reader = new \PhpOffice\PhpSpreadsheet\Reader\Csv();
+        $reader->setDelimiter(';');
+        $reader->setEnclosure(' ');
+        $reader->setSheetIndex(0);
+        /* Load a CSV file and save as a XLS */
+        $spreadsheet = $reader->load($_SERVER['DOCUMENT_ROOT']."\\reports\\".strval($filename));
+        $filename=str_replace(".csv",".xlsx",$filename);
+        $writer = new Xlsx($spreadsheet);
+        $writer->save($_SERVER['DOCUMENT_ROOT']."\\reports\\".strval($filename));
+        $spreadsheet->disconnectWorksheets();
+        unset($spreadsheet);
+        //header('Content-Type : text/csv');
+        //header("Content-Disposition: attachment; filename=".$_SERVER['DOCUMENT_ROOT']."\\reports\\".$filename);
+        //header('Content-Type: application/force-download');
+        header("Content-Description: File Transfer");
+        header("Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        //header('Content-Type: application/force-download');
+        //header("Content-Disposition: attachment; filename=".$_SERVER['DOCUMENT_ROOT']."\\reports\\".$filename.'"');
+        //readfile ($_SERVER['DOCUMENT_ROOT']."\\reports\\".strval($filename).'.xlsx');
+        //exit();
+        unlink($_SERVER['DOCUMENT_ROOT']."\\reports\\".str_replace('xlsx','csv',$filename));
         return response()->download($_SERVER['DOCUMENT_ROOT']."\\reports\\".$filename);
-        //return Storage::download($_SERVER['DOCUMENT_ROOT']."\\reports\\".$filename,'abc',$headers);
-        //$path=storage_path('public/reports/');
-        //return Storage::download($path,$filename,$headers);
     }
 }
 
